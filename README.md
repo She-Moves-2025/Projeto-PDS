@@ -35,7 +35,7 @@ git clone https://github.com/She-Moves-2025/Projeto-PDS.git
 cd Projeto-PDS
 
 ```
-2. **Crie o ambiente virtual:**\\  
+2. **Crie o ambiente virtual:**\  
 **Linux/MacOS:**
 ```
 python3 -m venv venv
@@ -46,18 +46,18 @@ source venv/bin/activate
 python -m venv venv
 venv\Scripts\activate  
 ```
-3. **Instale as dependências:**\
+3. **Instale as dependências:**
 ```
 pip install -r requirements.txt
 ```  
 
-4. **Configure a conexão com o banco de dados PostgreSQL:**\
+4. **Configure a conexão com o banco de dados PostgreSQL:**
 No arquivo config.py, atualize a URI do banco:
 ```
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://usuario:senha@localhost:5432/nome_do_banco'
 ```
 
-5. **Crie as tabelas no banco:**\
+5. **Crie as tabelas no banco:**
 ```
 flask shell  
 >>> from app import db  
@@ -65,7 +65,7 @@ flask shell
 >>> exit()
 ```
 
-6. **Execute a aplicação:**\
+6. **Execute a aplicação:**
 ```
 flask run
 ```
