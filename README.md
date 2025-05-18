@@ -36,12 +36,12 @@ cd Projeto-PDS
 
 ```
 3. **Crie o ambiente virtual:**\
-**Linux/MacOS:**\
+**Linux/MacOS:**
 ```
 python3 -m venv venv
 source venv/bin/activate  
 ```
-**Windows:**\
+**Windows:**
 ```
 python -m venv venv
 venv\Scripts\activate  
