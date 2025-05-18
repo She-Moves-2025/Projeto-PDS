@@ -35,7 +35,8 @@ git clone https://github.com/She-Moves-2025/Projeto-PDS.git
 cd Projeto-PDS
 
 ```
-2. **Crie o ambiente virtual:**  
+2. **Crie o ambiente virtual:**
+ 
 **Linux/MacOS:**
 ```
 python3 -m venv venv
