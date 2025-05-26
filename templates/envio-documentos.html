@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Verificação de Identidade</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Envio de Documentos</h1>
+    <form action="/envio-documentos" method="POST" enctype="multipart/form-data">
+      <label for="documento">Foto do documento:</label>
+      <input type="file" name="documento" required>
+
+      <label for="selfie">Foto segurando o documento:</label>
+      <input type="file" name="selfie" required>
+
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+</body>
+</html>

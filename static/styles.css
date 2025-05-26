@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+h1 {
+  color: #008080;
+  text-align: center;
+}
+
+.usuario {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+img {
+  max-height: 200px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.botoes {
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.aprovado {
+  background-color: #28a745;
+  color: white;
+}
+
+.recusado {
+  background-color: #dc3545;
+  color: white;
+}

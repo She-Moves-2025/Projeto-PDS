@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro Cliente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1 class="logo">
+      <span style="color: rgb(0, 192, 188);">She</span>Moves
+    </h1>
+    <div class="form-container">
+      <h2 class="form-title">Cliente</h2>
+      <form action="/cadastro-cliente" method="POST">
+        <label for="nome">Nome completo:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="data_nascimento">Data de nascimento:</label>
+        <input type="date" id="data_nascimento" name="nascimento" required>
+
+        <label for="cref">CPF:</label>
+        <input type="text" id="cpf" name="cpf" required>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+
+        <button type="submit" class="submit-btn">Cadastrar</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: shemoves-backend
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        fromEnvVar: DATABASE_URL
+      - key: SECRET_KEY
+        fromEnvVar: SECRET_KEY
+    plan: free
+    autoDeploy: true

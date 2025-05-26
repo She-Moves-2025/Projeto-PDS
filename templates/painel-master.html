@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel de Verificação</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Painel de Verificação (MASTER)</h1>
+
+    <h2>Clientes Pendentes</h2>
+    {% for cliente in clientes %}
+      <div class="usuario">
+        <p><strong>ID:</strong> {{ cliente.id }}</p>
+        <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+        <div>
+          <img src="{{ url_for('static', filename='uploads/cliente_' + cliente.id|string + '/documento.png') }}" width="200">
+          <img src="{{ url_for('static', filename='uploads/cliente_' + cliente.id|string + '/selfie.png') }}" width="200">
+        </div>
+        <div class="botoes">
+          <form action="/aprovar/cliente/{{ cliente.id }}" method="POST" style="display:inline;">
+            <button type="submit" class="aprovado">✔️ Aprovar</button>
+          </form>
+          <form action="/recusar/cliente/{{ cliente.id }}" method="POST" style="display:inline;">
+            <button type="submit" class="recusado">❌ Recusar</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+
+    <h2>Profissionais Pendentes</h2>
+    {% for profissional in profissionais %}
+      <div class="usuario">
+        <p><strong>ID:</strong> {{ profissional.id }}</p>
+        <p><strong>Nome:</strong> {{ profissional.nome }}</p>
+        <div>
+          <img src="{{ url_for('static', filename='uploads/profissional_' + profissional.id|string + '/documento.png') }}" width="200">
+          <img src="{{ url_for('static', filename='uploads/profissional_' + profissional.id|string + '/selfie.png') }}" width="200">
+        </div>
+        <div class="botoes">
+          <form action="/aprovar/profissional/{{ profissional.id }}" method="POST" style="display:inline;">
+            <button type="submit" class="aprovado">✔️ Aprovar</button>
+          </form>
+          <form action="/recusar/profissional/{{ profissional.id }}" method="POST" style="display:inline;">
+            <button type="submit" class="recusado">❌ Recusar</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
