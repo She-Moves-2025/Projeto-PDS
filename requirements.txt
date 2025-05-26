@@ -4,7 +4,6 @@ Flask-Mail==0.10.0
 Flask-SQLAlchemy==3.1.1
 Flask-Uploads==0.2.1
 gunicorn==23.0.0
-language-selector==0.1
 poetry==1.1.12
 poetry-core==1.0.7
 protobuf==3.12.4
