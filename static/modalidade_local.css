@@ -1,0 +1,125 @@
+body {
+  background: #a887ff;
+  font-family: 'Montserrat', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+.top-bar {
+  background: #39363B;
+  padding: 20px 0 10px 24px;
+  border-radius: 0 0 24px 24px;
+}
+.top-bar h2 {
+  color: #A887FF;
+  font-size: 1.25rem;
+  margin: 0;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+  background: #39363B;
+  padding: 18px 0 18px 0;
+  border-radius: 0 0 24px 24px;
+  gap: 8px;
+}
+.tab-btn {
+  border: none;
+  border-radius: 20px;
+  padding: 10px 30px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #A887FF;
+  background: #e0e0e0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.tab-btn.active {
+  background: #48e0c7;
+  color: #fff;
+}
+.tab-content {
+  padding: 24px;
+}
+#locais-lista {
+  margin-bottom: 12px;
+}
+.local-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.select {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #fff;
+  font-size: 1rem;
+  min-width: 110px;
+  margin-bottom: 8px;
+}
+.local-item {
+  background: linear-gradient(90deg, #f1f1f1 80%, #e0e0e0 100%);
+  border-radius: 24px;
+  padding: 12px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.08rem;
+  box-shadow: 0 2px 8px rgba(57,54,59,0.07);
+}
+.remove-local {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #A887FF;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background: #39363B;
+  padding: 16px 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: 24px 24px 0 0;
+  z-index: 10;
+}
+.submit-btn {
+  background: #48e0c7;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-right: 24px;
+  cursor: pointer;
+}
+.fab {
+  background: #A887FF;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-right: 24px;
+  box-shadow: 0 2px 12px rgba(57,54,59,0.13);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 600px) {
+  .tab-content { padding: 8px; }
+  .submit-btn, .fab { margin-right: 10px; }
+  .local-form { flex-direction: column; }
+}

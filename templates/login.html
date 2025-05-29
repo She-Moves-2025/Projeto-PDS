@@ -4,28 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SHEMOVES</title>
-  <link rel="stylesheet" href="{{url_for('static', filename='styles.css') }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
-  
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_login.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="logo">
-      <img src="{{ url_for('static', filename='imagens/logo-shemoves.png') }}">
+  <div class="login-container">
+    <div class="icon-circle purple">
+           <img src="{{ url_for('static', filename='imagens/avatar.png') }}"  class="icon-img">
     </div>
-    <h1 class="login-title">LOGIN</h1>
-    <form action="/login"  id="login-form" method="POST">
-      <label for="email">E-mail:</label>
-      <input type="email" id="email" name="email" placeholder="seuemail@example.com" required>
-      
-      <label for="password">Senha:</label>
-      <div class="password-wrapper">
-        <input type="password" id="password" name="senha" placeholder="********" required>
+    <h2 class="welcome-title">Bem-Vinda</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for message in messages %}
+            <span>{{ message }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <form action="/login" id="login-form" method="POST" autocomplete="off">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="example@example.com" required>
+        <span class="error-message" id="email-error"></span>
       </div>
-      
-      <button type="submit" class="login-btn">ENTRAR</button>
+      <div class="input-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" placeholder="************" required>
+        <span class="error-message" id="senha-error"></span>
+        <a href="/esqueceu-senha" class="forgot-link">Esqueceu a senha?</a>
+      </div>
+      <div class="password-checklist" id="password-checklist">
+        <span id="check-length" class="check-item">• Pelo menos 8 caracteres</span><br>
+        <span id="check-number" class="check-item">• Pelo menos 1 número</span><br>
+        <span id="check-special" class="check-item">• Pelo menos 1 caractere especial</span>
+      </div>
+
+      <button type="submit" class="login-btn">Log In</button>
     </form>
+    <div class="register-link">
+      Ainda não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+    </div>
   </div>
+  <script src="{{ url_for('static', filename='login.js') }}"></script>
 </body>
 </html>

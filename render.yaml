@@ -1,3 +1,4 @@
+
 services:
   - type: web
     name: shemoves-backend
@@ -5,9 +6,11 @@ services:
     buildCommand: ""
     startCommand: gunicorn app:app
     envVars:
-      - key: DATABASE_URL
-        fromEnvVar: DATABASE_URL
       - key: SECRET_KEY
-        fromEnvVar: SECRET_KEY
+        value: E3vuNo5OvRMKQ6nVmaIHsnZ1FEtwrpAT
+      - key: DATABASE_URL
+        value: postgresql://shemoves_db_user:E3vuNo5OvRMKQ6nVmaIHsnZ1FEtwrpAT@dpg-d0ptleodl3ps73b4efkg-a.oregon-postgres.render.com/shemoves_db
+      - key: RENDER
+        value: true
     plan: free
     autoDeploy: true

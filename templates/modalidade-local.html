@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuração Inicial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='modalidade_local.css') }}">
+</head>
+<body>
+  <div class="top-bar">
+    <h2>Configuração Inicial</h2>
+  </div>
+  <form id="config-form" method="POST">
+    <div class="tabs">
+      <button type="button" class="tab-btn active" id="tab-local">Local</button>
+      <button type="button" class="tab-btn" id="tab-modalidade">Especialidade</button>
+    </div>
+    <div class="tab-content" id="content-local">
+      <div id="locais-lista">
+        {% for regiao in regioes %}
+        <div class="local-item">
+          <span>{{ regiao.estado }} / {{ regiao.cidade }} / {{ regiao.bairro }}</span>
+          <button type="button" class="remove-local" onclick="removerLocal(this)">×</button>
+          <input type="hidden" name="locais[]" value="{{ regiao.estado }}|{{ regiao.cidade }}|{{ regiao.bairro }}">
+        </div>
+        {% endfor %}
+      </div>
+      <div class="local-form">
+          <select id="estado" class="select" required>
+             <option value="">Estado</option>
+          </select>
+          <select id="cidade" class="select" required disabled>
+             <option value="">Cidade</option>
+          </select>
+          <select id="bairro" class="select" required disabled>
+             <option value="">Bairro</option>
+          </select>
+      </div>
+    </div>
+    <div class="tab-content" id="content-modalidade" style="display:none;">
+      <div class="modalidades-lista">
+        {% for modalidade in modalidades %}
+        <label class="modalidade-item">
+          <input type="checkbox" name="modalidades[]" value="{{ modalidade }}"
+            {% if modalidade in modalidades_salvas %} checked {% endif %}>
+          <span>{{ modalidade }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <button type="submit" class="submit-btn">Salvar</button>
+      <button type="button" class="fab" onclick="adicionarLocalForm()">+</button>
+    </div>
+  </form>
+  <script>
+    // Tabs
+    document.getElementById('tab-local').onclick = function() {
+      this.classList.add('active');
+      document.getElementById('tab-modalidade').classList.remove('active');
+      document.getElementById('content-local').style.display = '';
+      document.getElementById('content-modalidade').style.display = 'none';
+    }
+    document.getElementById('tab-modalidade').onclick = function() {
+      this.classList.add('active');
+      document.getElementById('tab-local').classList.remove('active');
+      document.getElementById('content-local').style.display = 'none';
+      document.getElementById('content-modalidade').style.display = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Carrega estados do IBGE ao abrir a página
+    fetch('/api/estados')
+        .then(res => res.json())
+        .then(estados => {
+        const estadoSelect = document.getElementById('estado');
+        estados.forEach(e => {
+            estadoSelect.innerHTML += `<option value="${e.id}" data-sigla="${e.sigla}">${e.nome} (${e.sigla})</option>`;
+        });
+        });
+
+    // Ao selecionar estado, carrega cidades
+    document.getElementById('estado').onchange = function() {
+        const idEstado = this.value;
+        const cidadeSelect = document.getElementById('cidade');
+        cidadeSelect.innerHTML = '<option value="">Cidade</option>';
+        document.getElementById('bairro').innerHTML = '<option value="">Bairro</option>';
+        document.getElementById('bairro').disabled = true;
+        if (idEstado) {
+        cidadeSelect.disabled = false;
+        fetch(`/api/cidades/${idEstado}`)
+            .then(res => res.json())
+            .then(cidades => {
+            cidades.forEach(c => {
+                cidadeSelect.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+            });
+            });
+        } else {
+        cidadeSelect.disabled = true;
+        }
+    };
+
+    // Ao selecionar cidade, carrega bairros da API Brasil Aberto
+    document.getElementById('cidade').onchange = function() {
+        const idCidade = this.value;
+        const bairroSelect = document.getElementById('bairro');
+        bairroSelect.innerHTML = '<option value="">Bairro</option>';
+        if (idCidade) {
+        bairroSelect.disabled = false;
+        fetch(`https://api.brasilaberto.com/v1/districts-by-ibge-code/${idCidade}`)
+            .then(res => res.json())
+            .then(data => {
+            if (data.result && data.result.length > 0) {
+                data.result.forEach(b => {
+                bairroSelect.innerHTML += `<option value="${b.name}">${b.name}</option>`;
+                });
+            }
+            });
+        } else {
+        bairroSelect.disabled = true;
+        }
+    };
+
+    // Adicionar local pelo botão "+"
+    window.adicionarLocalForm = function() {
+        document.getElementById('tab-local').click();
+        const estadoSelect = document.getElementById('estado');
+        const cidadeSelect = document.getElementById('cidade');
+        const bairroSelect = document.getElementById('bairro');
+        const estadoNome = estadoSelect.options[estadoSelect.selectedIndex]?.text || '';
+        const cidadeNome = cidadeSelect.options[cidadeSelect.selectedIndex]?.text || '';
+        const bairroNome = bairroSelect.value;
+
+        if (estadoSelect.value && cidadeSelect.value && bairroNome) {
+        const localDiv = document.createElement('div');
+        localDiv.className = 'local-item';
+        localDiv.innerHTML = `
+            <span>${estadoNome} / ${cidadeNome} / ${bairroNome}</span>
+            <button type="button" class="remove-local" onclick="removerLocal(this)">×</button>
+            <input type="hidden" name="locais[]" value="${estadoNome}|${cidadeNome}|${bairroNome}">
+        `;
+        document.getElementById('locais-lista').appendChild(localDiv);
+        estadoSelect.value = '';
+        cidadeSelect.innerHTML = '<option value="">Cidade</option>';
+        cidadeSelect.disabled = true;
+        bairroSelect.innerHTML = '<option value="">Bairro</option>';
+        bairroSelect.disabled = true;
+        }
+    };
+
+    window.removerLocal = function(btn) {
+        btn.parentElement.remove();
+    };
+    });
+
+  </script>
+</body>
+</html>

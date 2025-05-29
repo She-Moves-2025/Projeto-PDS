@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Que Você É?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_escolha.css') }}">
+</head>
+<body>
+  <div class="container">
+    <a href="javascript:history.back()" class="voltar">&lt; Voltar</a>
+    <div class="titulo-box">
+      <h1>O Que Você É?</h1>
+    </div>
+    <div class="opcoes">
+      <button class="opcao-btn profissional" onclick="window.location.href='/cadastro-profissional'">
+        <div class="icon-circle purple">
+           <img src="{{ url_for('static', filename='imagens/profissional.png') }}" alt="Profissional" class="icon-img">
+        </div>
+        <span>Profissional</span>
+      </button>
+      <button class="opcao-btn aluna" onclick="window.location.href='/cadastro-cliente'">
+        <div class="icon-circle green">
+          <img src="{{ url_for('static', filename='imagens/aluna.png') }}" alt="Aluna" class="icon-img">
+        </div>
+        <span>Cliente</span>
+      </button>
+    </div>
+  </div>
+</body>
+</html>

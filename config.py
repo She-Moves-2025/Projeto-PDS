@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Carrega variáveis do arquivo .env
+if not os.getenv("RENDER"):  # variável só existe no Render
+    load_dotenv(".env")
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
@@ -14,5 +15,8 @@ class Config:
 
     # Tamanho máximo de upload (ex: 16 MB)
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+
+
+
 
    
