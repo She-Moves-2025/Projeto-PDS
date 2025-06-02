@@ -1,0 +1,137 @@
+/* Reset e base */
+/* * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
+} */
+
+/* Container principal */
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 16px 80px;
+}
+
+/* Logo SheMoves */
+.logo {
+  font-family: 'Passion One', sans-serif;
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #fff;
+}
+
+/* Título do formulário */
+.form-title {
+  text-align: center;
+  color: #00e2c4;
+  font-size: 24px;
+  margin-bottom: 24px;
+  font-family: 'Oswald', sans-serif;
+}
+
+/* Formulário */
+.form-container {
+  background: linear-gradient(to bottom right, #8d5efb, #6c4ee3);
+  padding: 24px;
+  border-radius: 16px;
+}
+
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: #f2f2f2;
+  font-size: 16px;
+}
+
+/* Botão */
+/* .submit-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #333;
+  color: white;
+  font-size: 16px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #555;
+} */
+
+.submit-btn {
+  width: 100%;
+  padding: 12px 0;
+  background: #39354A;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #00e2c4;
+  color: #ffffff;
+}
+
+
+/* .flash-messages {
+  background: #ffdddd;
+  color: #d8000c;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.error-message {
+  color: #ff5a5a;
+  font-size: 0.85rem;
+  height: 18px;
+  margin-bottom: 2px;
+} */
+
+.password-checklist {
+  font-size: 0.92rem;
+  margin-top: 6px;
+  margin-bottom: 5px;
+  color: #bbb;
+}
+
+.check-item {
+  transition: color 0.2s;
+}
+
+.check-item.valid {
+  color: #48e0c7;
+  font-weight: 600;
+}

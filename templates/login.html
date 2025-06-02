@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SHEMOVES</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_login.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -25,21 +26,15 @@
     <form action="/login" id="login-form" method="POST" autocomplete="off">
       <div class="input-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="example@example.com" required>
+        <input type="email" id="email" name="email" placeholder="seuemail@aqui" required>
         <span class="error-message" id="email-error"></span>
       </div>
       <div class="input-group">
         <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" placeholder="************" required>
+        <input type="password" id="senha" name="senha" placeholder="********" required>
         <span class="error-message" id="senha-error"></span>
         <a href="/esqueceu-senha" class="forgot-link">Esqueceu a senha?</a>
       </div>
-      <div class="password-checklist" id="password-checklist">
-        <span id="check-length" class="check-item">• Pelo menos 8 caracteres</span><br>
-        <span id="check-number" class="check-item">• Pelo menos 1 número</span><br>
-        <span id="check-special" class="check-item">• Pelo menos 1 caractere especial</span>
-      </div>
-
       <button type="submit" class="login-btn">Log In</button>
     </form>
     <div class="register-link">

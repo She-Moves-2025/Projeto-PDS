@@ -2,21 +2,54 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Verificação de Identidade</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Envio de Documentos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_documentos.css') }}"> 
 </head>
 <body>
-  <div class="container">
-    <h1>Envio de Documentos</h1>
-    <form action="/envio-documentos" method="POST" enctype="multipart/form-data">
-      <label for="documento">Foto do documento:</label>
-      <input type="file" name="documento" required>
 
-      <label for="selfie">Foto segurando o documento:</label>
-      <input type="file" name="selfie" required>
+<div class="container">
+  <a href="javascript:history.back()" class="voltar">&lt;</a>
+  <h1>Documentação</h1>
+  <h2>Envie os seguintes documentos:</h2>
+  
+  <div class="form-container">
+  <form action="/envio-documentos" method="POST" enctype="multipart/form-data">
+ 
+    <label for="documento">
+      Carteira de Identidade Nacional (Frente e Verso)
+      <span class="tooltip">?
+        <span class="tooltip-text">Necessária para validação de gênero</span>
+      </span>
+    </label>
+    <label class="file-label" for="documento">Selecionar arquivo</label>
+    <input type="file" id="documento" name="documento" accept="image/*" required>
+    <div class="file-name" id="nome-documento"></div>
 
-      <button type="submit">Enviar</button>
-    </form>
-  </div>
+    <label for="selfie">Foto segurando o documento:</label>
+    <label class="file-label" for="selfie">Selecionar arquivo</label>
+    <input type="file" id="selfie" name="selfie" accept="image/*" required>
+    <div class="file-name" id="nome-selfie"></div>
+
+    <button type="submit">Enviar</button>
+  </form>
+</div>
+</div>
+
+<script>
+  const inputDocumento = document.getElementById('documento');
+  const nomeDocumento = document.getElementById('nome-documento');
+  const inputSelfie = document.getElementById('selfie');
+  const nomeSelfie = document.getElementById('nome-selfie');
+
+  inputDocumento.addEventListener('change', () => {
+    nomeDocumento.textContent = inputDocumento.files[0]?.name || '';
+  });
+
+  inputSelfie.addEventListener('change', () => {
+    nomeSelfie.textContent = inputSelfie.files[0]?.name || '';
+  });
+</script>
+
 </body>
 </html>

@@ -4,18 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro Profissional</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_cliente.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
+    <a href="javascript:history.back()" class="voltar">&lt;</a>
     <h1 class="logo">
       <span style="color: rgb(0, 192, 188);">She</span>Moves
     </h1>
     <div class="form-container">
       <h2 class="form-title">PROFISSIONAL</h2>
-      <form action="/cadastro-profissional" method="POST">
+      <form action="/cadastro-profissional" id="login-form" method="POST">
         <label for="nome">Nome completo:</label>
         <input type="text" id="nome" name="nome" required>
 
@@ -33,10 +36,16 @@
 
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha" required>
+        <div class="password-checklist" id="password-checklist">
+        <span id="check-length" class="check-item">• Pelo menos 8 caracteres</span><br>
+        <span id="check-number" class="check-item">• Pelo menos 1 número</span><br>
+        <span id="check-special" class="check-item">• Pelo menos 1 caractere especial</span>
+      </div>
 
         <button type="submit" class="submit-btn">Cadastrar</button>
       </form>
     </div>
   </div>
+  <script src="{{ url_for('static', filename='login.js') }}"></script>
 </body>
 </html>
