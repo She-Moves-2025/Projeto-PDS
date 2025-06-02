@@ -342,6 +342,11 @@ def esqueceu_senha():
         return redirect('/esqueceu-senha')
     return render_template('esqueceu-senha.html')
 
+# ========== Perfil ===========
+@app.route('/perfil')
+def perfil():
+    return render_template('perfil.html')
+
 
 # ========== Rodar servidor ===========
 if __name__ == '__main__':

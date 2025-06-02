@@ -24,6 +24,21 @@
   margin-bottom: 12px;
 }
 
+.logo-shemoves{
+  width: 175px;
+  height: 175px;
+  border-radius: 100px;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.icon-img{
+  width: 210px;
+  height: 210px;
+}
+
 .welcome-title {
   color: #A887FF;
   margin: 0 0 24px 0;
