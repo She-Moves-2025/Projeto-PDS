@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV=/home/leonardo/Documentos/Marmottas-PDS/Projeto-PDS/venv
+VIRTUAL_ENV=/home/leonardo/Documentos/Atualizado-PDS/Projeto-PDS/venv
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

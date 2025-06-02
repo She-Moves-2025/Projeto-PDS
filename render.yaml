@@ -10,6 +10,8 @@ services:
         value: E3vuNo5OvRMKQ6nVmaIHsnZ1FEtwrpAT
       - key: DATABASE_URL
         value: postgresql://shemoves_db_user:E3vuNo5OvRMKQ6nVmaIHsnZ1FEtwrpAT@dpg-d0ptleodl3ps73b4efkg-a.oregon-postgres.render.com/shemoves_db
+      - key: BRASIL_ABERTO_API_KEY
+        value: ytVMOBXJP3cr60C4DVqAil4PCSl1QufUhMRSnFia6uleZ0jJaWVhYDXGWGZ5dUVR
       - key: RENDER
         value: true
     plan: free

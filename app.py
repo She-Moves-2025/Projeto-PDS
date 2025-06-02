@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify 
+from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, current_app 
 from config import Config
 from models import db, Profissional, Perfil, Login, Regiao, Modalidade, Cliente, RecuperarSenha, Notificacao, Avaliacao, Agendamento, Pagamento, Chat
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -198,19 +198,18 @@ def login():
         return redirect('/agenda')
 
     elif perfil.id_profissional:
-        profissional = Profissional.query.get(perfil.id_profissional)
-        if not profissional.validado:
-            return redirect('/aguardando-aprovacao')
+          profissional = Profissional.query.get(perfil.id_profissional)
+          if not profissional.validado:
+              return redirect('/aguardando-aprovacao')
 
-        session['id'] = profissional.id
-        session['tipo'] = 'profissional'
+          session['id'] = profissional.id
+          session['tipo'] = 'profissional'
 
-        # Verifique se já tem regiões/modalidades cadastradas:
-        tem_regioes = Regiao.query.filter_by(id_profissional=profissional.id).first()
-        tem_modalidades = Modalidade.query.filter_by(id_profissional=profissional.id).first()
-        if not tem_regioes or not tem_modalidades:
-           return redirect('/modalidade-local')
-        return redirect('/agenda')
+          tem_regioes = Regiao.query.filter_by(id_profissional=profissional.id).first()
+          tem_modalidades = Modalidade.query.filter_by(id_profissional=profissional.id).first()
+          if not tem_regioes or not tem_modalidades:
+              return redirect('/modalidade-local')
+          return redirect('/agenda')
 
 # ========== ROTA: Painel após login ===========
 @app.route('/agenda')
@@ -275,24 +274,34 @@ def api_cidades(id_estado):
 
 @app.route('/api/bairros/<int:id_cidade>')
 def api_bairros(id_cidade):
-    resp = requests.get(f'https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{id_cidade}/subdistritos')
-    data = resp.json()
-    return jsonify([{'id': b['id'], 'nome': b['nome']} for b in data])
+    # Tente pegar do current_app.config primeiro
+    api_key = current_app.config.get('BRASIL_ABERTO_API_KEY') or os.getenv('BRASIL_ABERTO_API_KEY')
+    print(f"TOKEN: {api_key}")
+    if not api_key:
+        return jsonify({'result': []}), 500
+    headers = {'Authorization': f'Bearer {api_key}'}
+    url = f'https://api.brasilaberto.com/v1/districts-by-ibge-code/{id_cidade}'
+    resp = requests.get(url, headers=headers)
+    if resp.status_code == 200:
+        data = resp.json()
+        return jsonify(data.get('result', []))
+    return jsonify({'result': []}), resp.status_code
 
 # --- TELA DE CONFIGURAÇÃO INICIAL ---
 @app.route('/modalidade-local', methods=['GET', 'POST'])
-def configuracao_inicial():
+def modalidade_local():
     if 'id' not in session or session.get('tipo') != 'profissional':
-        return redirect('/login')
+        return redirect('/')
 
     profissional_id = session['id']
 
     modalidades = [
-        'Pilates',
+        'Pilates', 
         'Musculação',
         'Yoga',
         'Fit Dance',
         'Boxe',
+        'Alongamento',
         'Crossfit',
         'Dança',
         'Treinamento Funcional',
@@ -300,13 +309,17 @@ def configuracao_inicial():
     ]
 
     if request.method == 'POST':
+        # Salva locais de atendimento
         locais = request.form.getlist('locais[]')
         Regiao.query.filter_by(id_profissional=profissional_id).delete()
+        locais_salvos = 0
         for local in locais:
             estado, cidade, bairro = local.split('|')
             regiao = Regiao(estado=estado, cidade=cidade, bairro=bairro, id_profissional=profissional_id)
             db.session.add(regiao)
+            locais_salvos += 1
 
+        # Salva modalidades
         modalidades_selecionadas = request.form.getlist('modalidades[]')
         Modalidade.query.filter_by(id_profissional=profissional_id).delete()
         for nome in modalidades_selecionadas:
@@ -314,8 +327,13 @@ def configuracao_inicial():
             db.session.add(modalidade)
 
         db.session.commit()
-        flash('Configuração salva com sucesso!')
-        # return redirect('/painel-profissional')
+
+        if locais_salvos > 0:
+            flash('Configuração salva com sucesso!', 'sucess')
+            return redirect('/agenda')  # Redireciona para a página inicial
+        else:
+            flash('Adicione ao menos um local de atendimento.', 'error')
+            # Não redireciona, apenas recarrega a página mostrando a mensagem
 
     # Carrega dados já cadastrados
     regioes = Regiao.query.filter_by(id_profissional=profissional_id).all()
@@ -331,7 +349,6 @@ def configuracao_inicial():
         regioes=regioes_list,
         modalidades_salvas=modalidades_salvas
     )
-
 # ========== ROTA: Esqueceu a senha  ===========
 @app.route('/esqueceu-senha', methods=['GET', 'POST'])
 def esqueceu_senha():

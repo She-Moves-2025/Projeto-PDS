@@ -17,9 +17,7 @@
 .tabs {
   display: flex;
   justify-content: center;
-  background: #39363B;
   padding: 18px 0 18px 0;
-  border-radius: 0 0 24px 24px;
   gap: 8px;
 }
 .tab-btn {
@@ -118,6 +116,27 @@
   align-items: center;
   justify-content: center;
 }
+
+.flash-messages { 
+  margin: 16px 0 0 0; 
+}
+
+.flash-success { 
+  color: #1a7f1a; 
+  background: #eaffea; 
+  border-radius: 8px; 
+  padding: 8px 18px; 
+  margin-bottom: 10px; 
+}
+
+.flash-error { 
+  color: #b00; 
+  background: #ffeaea; 
+  border-radius: 8px; 
+  padding: 8px 18px; 
+  margin-bottom: 10px; 
+}
+
 @media (max-width: 600px) {
   .tab-content { padding: 8px; }
   .submit-btn, .fab { margin-right: 10px; }
