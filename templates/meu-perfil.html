@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_perfil.css') }}">
+</head>
+<body>
+  <div class="container">
+    <a href="javascript:history.back()" class="voltar">&lt;</a>
+
+    <h2>Meu Perfil</h2>
+
+    <div class="perfil-box">
+      <img src="imagens\avatar.png" alt="Foto de Perfil" class="foto-perfil">
+      <div class="info">
+        <h3>{{ nome }}</h3>
+        <p class="email">{{ email }}</p>
+        <p class="idade">{{ idade }} Anos | Por Aqui Desde {{ ano_entrada }}</p>
+      </div>
+    </div>
+
+    <p class="bio">
+      {{ descricao }}
+    </p>
+
+</div>
+
+ <nav>
+  <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
+  <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+  <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
+  <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
+</nav>
+
+</body>
+</html>
+

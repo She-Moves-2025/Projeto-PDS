@@ -1,514 +1,20 @@
-<!-- <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Início - SheMoves</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles_cliente.css') }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: #2D2A32;
-      font-family: 'Oswald', sans-serif;
-      color: #fff;
-      padding-bottom: 80px;
-    }
-
-    header {
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .greeting {
-      font-size: 1.2rem;
-    }
-
-    .greeting span {
-      font-weight: 700;
-      color: #a887ff;
-    }
-
-    .menu {
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .calendar-section {
-      padding: 0 16px;
-      margin-bottom: 24px;
-    }
-
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      color: #00e2c4;
-      font-weight: 600;
-    }
-
-    .weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-      color: #ccc;
-      font-size: 0.85rem;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      padding: 8px 0;
-    }
-
-    .day {
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: transparent;
-      color: #ccc;
-    }
-
-    .day.today {
-      border: 2px solid #00e2c4;
-      color: #00e2c4;
-    }
-
-    .day.has-event {
-      background: #a887ff;
-      color: #fff;
-    }
-
-    .section-title {
-      padding: 0 16px;
-      margin: 16px 0 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #00e2c4;
-    }
-
-    .event-card {
-      background: #f2f2f2;
-      color: #000;
-      border-radius: 12px;
-      margin: 8px 16px;
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .event-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .event-type {
-      font-weight: 700;
-    }
-
-    .event-trainer {
-      font-size: 0.9rem;
-    }
-
-    .event-duration {
-      color: #a887ff;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .recent-section {
-      padding: 0 16px;
-      margin-top: 24px;
-    }
-
-    .recent-title {
-      font-size: 1rem;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .recent-cards {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-    }
-
-    .recent-card {
-      min-width: 140px;
-      background: #2D2A32;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-    }
-
-    .recent-card img {
-      width: 100%;
-      height: 80px;
-      object-fit: cover;
-    }
-
-    .recent-card .info {
-      padding: 6px;
-    }
-
-    .recent-card .name {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .recent-card .location {
-      font-size: 0.8rem;
-      color: #ccc;
-    }
-
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #2D2A32;
-      border-top: 1px solid #555;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 12px 0;
-    }
-
-    nav i {
-      font-size: 1.4rem;
-      color: #a887ff;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="greeting">
-      <div>Olá, <span>Maria</span></div>
-      <small>É hora de testar seus limites</small>
-    </div>
-    <div class="menu"><i class="fas fa-ellipsis-v"></i></div>
-  </header>
-
-  <section class="calendar-section">
-    <div class="calendar-header">
-      <div>Escolher Data</div>
-      <div>Junho</div>
-    </div>
-    <div class="weekdays">
-      <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SAB</div>
-    </div>
-    <div class="calendar-grid">
-      <div class="day"> </div><div class="day"> </div><div class="day"> </div><div class="day"> </div><div class="day"> </div><div class="day"> </div><div class="day">1</div>
-      <div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div><div class="day">8</div>
-      <div class="day has-event">9</div><div class="day today has-event">10</div><div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="day">14</div><div class="day">15</div>
-      <div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div><div class="day">21</div><div class="day">22</div>
-      <div class="day">23</div><div class="day">24</div><div class="day">25</div><div class="day">26</div><div class="day">27</div><div class="day">28</div><div class="day">29</div>
-      <div class="day">30</div>
-    </div>
-  </section>
-
-  <div class="section-title">Agendamentos</div>
-  <div class="event-card">
-    <div class="event-info">
-      <div class="event-type">Musculação</div>
-      <div class="event-trainer">Ana Paula Mazela<br>09/06/2025 - 16h</div>
-    </div>
-    <div class="event-duration">90 Mins</div>
-  </div>
-  <div class="event-card">
-    <div class="event-info">
-      <div class="event-type">Yoga</div>
-      <div class="event-trainer">Nathaly Bueno<br>10/06/2025 - 9h</div>
-    </div>
-    <div class="event-duration">50 Mins</div>
-  </div>
-
-  <div class="recent-section">
-    <div class="recent-title">Últimos Agendamentos</div>
-    <div class="recent-cards">
-      <div class="recent-card">
-        <img src="https://via.placeholder.com/140x80.png?text=Pilates" alt="Studio Pilates">
-        <div class="info">
-          <div class="name">Studio Pilates</div>
-          <div class="location">Jardim Limão</div>
-        </div>
-      </div>
-      <div class="recent-card">
-        <img src="https://via.placeholder.com/140x80.png?text=Ana+Paula" alt="Ana Paula">
-        <div class="info">
-          <div class="name">Ana Paula - Personal</div>
-          <div class="location">Vila Almeida</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <nav>
-    <i class="fas fa-home"></i>
-    <i class="fas fa-search"></i>
-    <i class="fas fa-calendar-alt"></i>
-    <i class="fas fa-bell"></i>
-  </nav>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Início - SheMoves</title>
-   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_agenda.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700&family=Oswald:wght@400;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: #2D2A32;
-      font-family: 'Oswald', sans-serif;
-      color: #fff;
-      padding-bottom: 80px;
-    }
-
-    header {
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .greeting {
-      font-size: 1.2rem;
-    }
-
-    .greeting span {
-      font-weight: 700;
-      color: #a887ff;
-    }
-
-    .menu {
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .calendar-section {
-      padding: 0 16px;
-      margin-bottom: 24px;
-    }
-
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      color: #00e2c4;
-      font-weight: 600;
-    }
-
-    .weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-      color: #ccc;
-      font-size: 0.85rem;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      padding: 8px 0;
-    }
-
-    .day {
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: transparent;
-      color: #ccc;
-    }
-
-    .day.today {
-      border: 2px solid #00e2c4;
-      color: #00e2c4;
-    }
-
-    .day.has-event {
-      background: #a887ff;
-      color: #fff;
-    }
-
-    .section-title {
-      padding: 0 16px;
-      margin: 16px 0 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #00e2c4;
-    }
-
-    .event-card {
-      background: #f2f2f2;
-      color: #000;
-      border-radius: 12px;
-      margin: 8px 16px;
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .event-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .event-type {
-      font-weight: 700;
-    }
-
-    .event-trainer {
-      font-size: 0.9rem;
-    }
-
-    .event-duration {
-      color: #a887ff;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .recent-section {
-      padding: 0 16px;
-      margin-top: 24px;
-    }
-
-    .recent-title {
-      font-size: 1rem;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .recent-cards {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-    }
-
-    .recent-card {
-      min-width: 140px;
-      background: #2D2A32;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-    }
-
-    .recent-card img {
-      width: 100%;
-      height: 80px;
-      object-fit: cover;
-    }
-
-    .recent-card .info {
-      padding: 6px;
-    }
-
-    .recent-card .name {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .recent-card .location {
-      font-size: 0.8rem;
-      color: #ccc;
-    }
-
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #2D2A32;
-      border-top: 1px solid #555;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 12px 0;
-    }
-
-    nav i {
-      font-size: 1.4rem;
-      color: #a887ff;
-    }
-    /* ... todo o estilo que você já tinha ... */
-
-    .menu-dropdown {
-      position: absolute;
-      top: 60px;
-      right: 16px;
-      background: #444;
-      border-radius: 8px;
-      overflow: hidden;
-      display: none;
-      z-index: 10;
-    }
-
-    .menu-dropdown a {
-      display: block;
-      padding: 10px 16px;
-      color: white;
-      text-decoration: none;
-    }
-
-    .menu-dropdown a:hover {
-      background-color: #666;
-    }
-
-    .calendar-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #00e2c4;
-    }
-
-    .calendar-nav button {
-      background: none;
-      border: none;
-      color: #00e2c4;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    .day[data-active="true"] {
-      cursor: pointer;
-    }
-  </style>
 </head>
+
 <body>
   <header>
     <div class="greeting">
@@ -519,7 +25,7 @@
       <i class="fas fa-ellipsis-v"></i>
     </div>
     <div class="menu-dropdown" id="dropdownMenu">
-      <a href="{{ url_for('perfil') }}">Meu Perfil</a>
+      <a href="{{ url_for('meuperfil') }}">Meu Perfil</a>
     </div>
   </header>
 
@@ -530,7 +36,13 @@
       <button onclick="changeMonth(1)">&gt;</button>
     </div>
     <div class="weekdays">
-      <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SAB</div>
+      <div>DOM</div>
+      <div>SEG</div>
+      <div>TER</div>
+      <div>QUA</div>
+      <div>QUI</div>
+      <div>SEX</div>
+      <div>SAB</div>
     </div>
     <div class="calendar-grid" id="calendarGrid"></div>
   </section>
@@ -561,12 +73,13 @@
     </div>
   </div>
 
-  <nav>
-    <i class="fas fa-home"></i>
-    <i class="fas fa-search"></i>
-    <i class="fas fa-calendar-alt"></i>
-    <i class="fas fa-bell"></i>
-  </nav>
+ <nav>
+  <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
+  <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+  <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
+  <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
+</nav>
+
 
   <script>
     function toggleMenu() {
@@ -623,4 +136,5 @@
     renderCalendar(currentDate);
   </script>
 </body>
+
 </html>

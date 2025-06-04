@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,11 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_cliente.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
   <div class="container">
     <a href="javascript:history.back()" class="voltar">&lt;</a>
@@ -35,10 +39,10 @@
         <input type="password" id="senha" name="senha" required>
 
         <div class="password-checklist" id="password-checklist">
-        <span id="check-length" class="check-item">• Pelo menos 8 caracteres</span><br>
-        <span id="check-number" class="check-item">• Pelo menos 1 número</span><br>
-        <span id="check-special" class="check-item">• Pelo menos 1 caractere especial</span>
-      </div>
+          <span id="check-length" class="check-item">• Pelo menos 8 caracteres</span><br>
+          <span id="check-number" class="check-item">• Pelo menos 1 número</span><br>
+          <span id="check-special" class="check-item">• Pelo menos 1 caractere especial</span>
+        </div>
 
         <button type="submit" class="submit-btn">Cadastrar</button>
       </form>
@@ -46,4 +50,5 @@
   </div>
   <script src="{{ url_for('static', filename='login.js') }}"></script>
 </body>
+
 </html>

@@ -6,7 +6,7 @@
 
 body {
   background: #2D2A32;
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: 'Montserrat', 'Oswald', Arial, sans-serif;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -40,43 +40,45 @@ body {
   margin-bottom: 2px;
 }
 
-    .tooltip {
-      position: relative;
-      display: inline-block;
-      cursor: pointer;
-      font-weight: bold;
-      margin-left: 5px;
-    }
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 5px;
+}
 
-    .tooltip .tooltip-text {
-      visibility: hidden;
-      width: 180px;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 8px;
-      border-radius: 6px;
-      position: absolute;
-      z-index: 1;
-      bottom: 125%; /* posição acima do botão */
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 180px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  /* posição acima do botão */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
-    .tooltip .tooltip-text::after {
-      content: "";
-      position: absolute;
-      top: 100%; /* seta para baixo */
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 5px;
-      border-style: solid;
-      border-color: #333 transparent transparent transparent;
-    }
+.tooltip .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  /* seta para baixo */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
 
-    .tooltip:hover .tooltip-text {
-      visibility: visible;
-      opacity: 1;
-    }
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,55 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <title>Envio de Documentos</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_documentos.css') }}"> 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
+  <div class="container">
+    <a href="javascript:history.back()" class="voltar">&lt;</a>
+    <h1 class="logo">
+      <span style="color: rgb(0, 192, 188);">She</span>Moves
+    </h1>
+    <div class="form-container">
+      <h2 class="form-title">Envie os seguintes documentos:</h2>
+      <form action="/envio-documentos" method="POST" enctype="multipart/form-data">
 
-<div class="container">
-  <a href="javascript:history.back()" class="voltar">&lt;</a>
-  <h1>Documentação</h1>
-  <h2>Envie os seguintes documentos:</h2>
-  
-  <div class="form-container">
-  <form action="/envio-documentos" method="POST" enctype="multipart/form-data">
- 
-    <label for="documento">
-      Carteira de Identidade Nacional (Frente e Verso)
-      <span class="tooltip">?
-        <span class="tooltip-text">Necessária para validação de gênero</span>
-      </span>
-    </label>
-    <label class="file-label" for="documento">Selecionar arquivo</label>
-    <input type="file" id="documento" name="documento" accept="image/*" required>
-    <div class="file-name" id="nome-documento"></div>
+        <label for="documento">
+          Carteira de Identidade Nacional (Frente e Verso)
+          <span class="tooltip">?
+            <span class="tooltip-text">Necessária para validação de gênero</span>
+          </span>
+        </label>
+        <label class="file-label" for="documento">Selecionar arquivo</label>
+        <input type="file" id="documento" name="documento" accept="image/*" required>
+        <div class="file-name" id="nome-documento"></div>
 
-    <label for="selfie">Foto segurando o documento:</label>
-    <label class="file-label" for="selfie">Selecionar arquivo</label>
-    <input type="file" id="selfie" name="selfie" accept="image/*" required>
-    <div class="file-name" id="nome-selfie"></div>
+        <label for="selfie">Foto segurando o documento:</label>
+        <br>
+        <label class="file-label" for="selfie">Selecionar arquivo</label>
+        <input type="file" id="selfie" name="selfie" accept="image/*" required>
+        <div class="file-name" id="nome-selfie"></div>
 
-    <button type="submit">Enviar</button>
-  </form>
-</div>
-</div>
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </div>
 
-<script>
-  const inputDocumento = document.getElementById('documento');
-  const nomeDocumento = document.getElementById('nome-documento');
-  const inputSelfie = document.getElementById('selfie');
-  const nomeSelfie = document.getElementById('nome-selfie');
+  <script>
+    const inputDocumento = document.getElementById('documento');
+    const nomeDocumento = document.getElementById('nome-documento');
+    const inputSelfie = document.getElementById('selfie');
+    const nomeSelfie = document.getElementById('nome-selfie');
 
-  inputDocumento.addEventListener('change', () => {
-    nomeDocumento.textContent = inputDocumento.files[0]?.name || '';
-  });
+    inputDocumento.addEventListener('change', () => {
+      nomeDocumento.textContent = inputDocumento.files[0]?.name || '';
+    });
 
-  inputSelfie.addEventListener('change', () => {
-    nomeSelfie.textContent = inputSelfie.files[0]?.name || '';
-  });
-</script>
+    inputSelfie.addEventListener('change', () => {
+      nomeSelfie.textContent = inputSelfie.files[0]?.name || '';
+    });
+  </script>
 
 </body>
+
 </html>

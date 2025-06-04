@@ -213,9 +213,22 @@ def login():
 
 # ========== ROTA: Painel após login ===========
 @app.route('/agenda')
-def painel():
+def agenda():
     if 'id' not in session:
         return redirect('/')
+    
+    # if request.method == 'POST':
+
+    #     tipo = session['tipo']
+    #     id_usuaria = session['id']
+
+    #     # Atualiza os campos no banco
+    #     if tipo == 'cliente':
+    #         usuaria = Cliente.query.get(id_usuaria)
+    #     else:
+    #         usuaria = Profissional.query.get(id_usuaria)
+    #     return render_template('agenda.html')
+
     return render_template('agenda.html')
 
 # ========== ROTA: Painel MASTER ===========
@@ -363,6 +376,26 @@ def esqueceu_senha():
 @app.route('/perfil')
 def perfil():
     return render_template('perfil.html')
+
+# ========== Meu Perfil ===========
+@app.route('/meu-perfil')
+def meuperfil():
+    return render_template('meu-perfil.html')
+
+# ========== Busca ===========
+@app.route('/busca')
+def busca():
+    return render_template('busca.html')
+
+# ========== Lista Chat===========
+@app.route('/lista-chat')
+def listachat():
+    return render_template('lista-chat.html')
+
+# ========== Notificações ===========
+@app.route('/notifiçações')
+def notificacoes():
+    return render_template('notificações.html')
 
 
 # ========== Rodar servidor ===========
