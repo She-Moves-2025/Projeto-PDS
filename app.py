@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, current_app 
+from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from models import db, Profissional, Perfil, Login, Regiao, Modalidade, Cliente, RecuperarSenha, Notificacao, Avaliacao, Agendamento, Pagamento, Chat
 from werkzeug.security import generate_password_hash, check_password_hash
