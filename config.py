@@ -8,6 +8,7 @@ if not os.getenv("RENDER"):
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     BRASIL_ABERTO_API_KEY = os.getenv('BRASIL_ABERTO_API_KEY')
     DEBUG = os.getenv('DEBUG', 'False').lower() in ['true', '1', 'yes']
     UPLOAD_FOLDER = os.path.join('static', 'uploads')
