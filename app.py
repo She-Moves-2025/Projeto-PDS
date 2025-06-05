@@ -10,6 +10,11 @@ import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
+print(app.config['SQLALCHEMY_DATABASE_URI'])
+
+# Configure a URI antes de inicializar o SQLAlchemy
+if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 
 db.init_app(app)
 
