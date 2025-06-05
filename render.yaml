@@ -13,6 +13,6 @@ services:
       - key: BRASIL_ABERTO_API_KEY
         value: ytVMOBXJP3cr60C4DVqAil4PCSl1QufUhMRSnFia6uleZ0jJaWVhYDXGWGZ5dUVR
       - key: RENDER
-        value: true
+        value: "true"
     plan: free
     autoDeploy: true
