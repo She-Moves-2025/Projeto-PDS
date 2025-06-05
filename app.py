@@ -13,9 +13,17 @@ app.config.from_object(Config)
 print(app.config['SQLALCHEMY_DATABASE_URI'])
 
 # Configure a URI antes de inicializar o SQLAlchemy
-if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"): app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
+if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"): 
+   app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 
 db.init_app(app)
+
+print("="*50)
+print("DEBUG - Configurações Carregadas:")
+print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+print(f"SECRET_KEY: {app.config['SECRET_KEY'] is not None}")
+print("="*50)
+
 
 # Cria as tabelas no banco
 with app.app_context():
