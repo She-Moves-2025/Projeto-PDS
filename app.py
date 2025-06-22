@@ -5,25 +5,16 @@ from config import Config
 from models import db, Profissional, Perfil, Login, Regiao, Modalidade, Cliente, RecuperarSenha, Notificacao, Avaliacao, Agendamento, Pagamento, Chat
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from datetime import datetime
+from sqlalchemy import func, or_, and_
+from sqlalchemy.orm import joinedload
 import os
 import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
-print(app.config['SQLALCHEMY_DATABASE_URI'])
-
-# Configure a URI antes de inicializar o SQLAlchemy
-if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"): 
-   app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 
 db.init_app(app)
-
-print("="*50)
-print("DEBUG - Configurações Carregadas:")
-print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
-print(f"SECRET_KEY: {app.config['SECRET_KEY'] is not None}")
-print("="*50)
-
 
 # Cria as tabelas no banco
 with app.app_context():
@@ -124,9 +115,7 @@ def cadastro_profissional():
 
     return render_template('cadastro-profissional.html')
 
-# ========== ROTA: Envio de Documentos ===========
-from werkzeug.utils import secure_filename
-import os
+# ========== ROTA: Envio de Documentos ==========
 
 @app.route('/envio-documentos', methods=['GET', 'POST'])
 def envio_documentos():
@@ -229,18 +218,6 @@ def login():
 def agenda():
     if 'id' not in session:
         return redirect('/')
-    
-    # if request.method == 'POST':
-
-    #     tipo = session['tipo']
-    #     id_usuaria = session['id']
-
-    #     # Atualiza os campos no banco
-    #     if tipo == 'cliente':
-    #         usuaria = Cliente.query.get(id_usuaria)
-    #     else:
-    #         usuaria = Profissional.query.get(id_usuaria)
-    #     return render_template('agenda.html')
 
     return render_template('agenda.html')
 
@@ -313,7 +290,7 @@ def api_bairros(id_cidade):
         return jsonify(data.get('result', []))
     return jsonify({'result': []}), resp.status_code
 
-# --- TELA DE CONFIGURAÇÃO INICIAL ---
+# --- TELA DE CADASTRO DE REGIÃO E MODALIDADE ---
 @app.route('/modalidade-local', methods=['GET', 'POST'])
 def modalidade_local():
     if 'id' not in session or session.get('tipo') != 'profissional':
@@ -391,14 +368,96 @@ def perfil():
     return render_template('perfil.html')
 
 # ========== Meu Perfil ===========
-@app.route('/meu-perfil')
-def meuperfil():
-    return render_template('meu-perfil.html')
 
-# ========== Busca ===========
-@app.route('/busca')
-def busca():
-    return render_template('busca.html')
+@app.route('/meu-perfil', methods=['GET', 'POST'])
+def meu_perfil():
+    if 'id' not in session or session.get('tipo') != 'profissional':
+        return redirect('/')
+
+    profissional_id = session['id']
+    perfil = Perfil.query.filter_by(id_profissional=profissional_id).first()
+    profissional = Profissional.query.get(profissional_id)
+    login = Login.query.filter_by(id_perfil=perfil.id).first()  # ou ajuste conforme seu relacionamento
+
+    if request.method == 'POST':
+        celular = request.form.get('celular')
+        biografia = request.form.get('biografia')[:500]
+        email = request.form.get('email')
+
+        # Atualiza perfil
+        perfil.celular = celular
+        perfil.biografia = biografia
+
+        # Atualiza e-mail
+        if login and email:
+            login.email = email
+
+        # Atualiza imagem (igual ao exemplo anterior)
+        file = request.files.get('imagem_perfil')
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            upload_path = os.path.join('static', 'uploads', filename)
+            file.save(upload_path)
+            perfil.imagem_perfil = upload_path
+
+        db.session.commit()
+        flash('Perfil atualizado com sucesso!', 'success')
+        return redirect(url_for('meu_perfil'))
+
+    return render_template('meu-perfil.html', perfil=perfil, email=login.email if login else '')
+
+# ========== ROTA: Pesquisa de Profissionas  ===========
+
+@app.route('/busca', methods=['GET', 'POST'])
+def buscar():
+    if 'id' not in session or session.get('tipo') != 'cliente':
+        return redirect('/')
+
+    modalidades_disponiveis = [
+        'Pilates', 'Musculação', 'Yoga', 'Fit Dance', 'Boxe',
+        'Alongamento', 'Crossfit', 'Dança', 'Treinamento Funcional', 'Natação'
+    ]
+
+    if request.method == 'POST':
+        estado = request.form.get('estado')
+        cidade = request.form.get('cidade') 
+        bairro = request.form.get('bairro')
+        modalidade = request.form.get('modalidade')
+        
+        return redirect(url_for('resultados_busca', estado=estado, cidade=cidade, bairro=bairro, modalidade=modalidade))
+
+    return render_template('busca.html', modalidades=modalidades_disponiveis)
+
+@app.route('/resultados')
+def resultados_busca():
+    if 'id' not in session or session.get('tipo') != 'cliente':
+        return redirect('/')
+
+    estado = request.args.get('estado', '').strip()
+    cidade = request.args.get('cidade', '').strip()
+    bairro = request.args.get('bairro', '').strip().lower()
+    modalidade = request.args.get('modalidade', '').strip().lower()
+
+    # Query corrigida
+    profissionais = Profissional.query\
+        .join(Regiao)\
+        .join(Modalidade)\
+        .filter(
+            func.lower(Regiao.cidade) == cidade.lower(),
+            func.lower(Regiao.bairro) == bairro,
+            func.lower(Modalidade.nome) == modalidade,
+            Profissional.validado == True
+        )\
+        .options(joinedload(Profissional.perfil))\
+        .all()
+
+    return render_template('resultados.html',
+                         profissionais=profissionais,
+                         busca_info={
+                             'cidade': cidade,
+                             'bairro': bairro,
+                             'modalidade': modalidade
+                         })
 
 # ========== Lista Chat===========
 @app.route('/lista-chat')

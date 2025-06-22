@@ -1,39 +1,94 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <title>Configurações de Perfil</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles_perfil.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_meuperfil.css') }}">
 </head>
 <body>
-  <div class="container">
-    <a href="javascript:history.back()" class="voltar">&lt;</a>
-
-    <h2>Meu Perfil</h2>
-
-    <div class="perfil-box">
-      <img src="imagens\avatar.png" alt="Foto de Perfil" class="foto-perfil">
-      <div class="info">
-        <h3>{{ nome }}</h3>
-        <p class="email">{{ email }}</p>
-        <p class="idade">{{ idade }} Anos | Por Aqui Desde {{ ano_entrada }}</p>
-      </div>
+  <div class="perfil-container">
+    <div class="perfil-header">
+      <a href="javascript:history.back()" class="voltar">&lt;</a>
+      <h2>Configurações De Perfil</h2>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <form method="POST" enctype="multipart/form-data" class="perfil-form">
+      <div class="perfil-foto-area">
+        <label for="imagem_perfil" class="perfil-foto-label">
+          <div class="perfil-foto">
+            {% if perfil and perfil.imagem_perfil %}
+              <img src="{{ url_for('static', filename=perfil.imagem_perfil.split('static/')[-1]) }}" alt="Foto de Perfil">
+            {% else %}
+              <img src="{{ url_for('static', filename='imagens/avatar-default.png') }}" alt="Foto de Perfil">
+            {% endif %}
+            <span class="perfil-foto-editar">&#128247;</span>
+          </div>
+          <input type="file" id="imagem_perfil" name="imagem_perfil" accept="image/*" style="display:none;">
+        </label>
+        <div class="perfil-criado">
+          Criado Em {{ perfil.criacao.strftime('%d/%m/%Y') if perfil and perfil.criacao else '' }}
+        </div>
+      </div>
+      <div class="perfil-campo">
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" maxlength="120" placeholder="seuemail@exemplo.com" value="{{ email }}" required>
+      </div>
+      <div class="perfil-campo">
+        <label for="celular">Celular:</label>
+        <input type="tel" id="celular" name="celular" maxlength="14" placeholder="(11) 90000-0000"
+               value="{{ perfil.celular if perfil else '' }}" required>
+      </div>
+      <div class="perfil-campo">
+        <label for="biografia">Biografia:</label>
+        <textarea id="biografia" name="biografia" maxlength="500" placeholder="Digite Suas Características Aqui.." required>{{ perfil.biografia if perfil else '' }}</textarea>
+        <div class="biografia-count" id="biografia-count">0/500</div>
+      </div>
+      <button type="submit" class="perfil-finalizar">Finalizar</button>
+    </form>
+  </div>
 
-    <p class="bio">
-      {{ descricao }}
-    </p>
+  <nav>
+    <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
+    <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+    <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
+    <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
+  </nav>
 
-</div>
-
- <nav>
-  <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
-  <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
-  <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
-  <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
-</nav>
+  <script>
+    // Contador de caracteres da biografia
+    const bio = document.getElementById('biografia');
+    const count = document.getElementById('biografia-count');
+    if (bio && count) {
+      count.textContent = (bio.value.length) + "/500";
+      bio.addEventListener('input', function() {
+        count.textContent = (bio.value.length) + "/500";
+      });
+    }
+    // Preview da imagem de perfil
+    const inputImg = document.getElementById('imagem_perfil');
+    const imgTag = document.querySelector('.perfil-foto img');
+    if (inputImg && imgTag) {
+      inputImg.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(ev) {
+            imgTag.src = ev.target.result;
+          }
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>

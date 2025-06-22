@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_buscar.css') }}">
+</head>
+<body>
+  <div class="buscar-container">
+    <div class="buscar-header">
+      <h1>Buscar</h1>
+      <div class="buscar-menu">⋮</div>
+    </div>
+    
+    <form id="buscar-form" method="POST">
+      <input type="text" class="buscar-input" placeholder="Pesquisa" id="pesquisa">
+      
+      <div class="buscar-tabs">
+        <button type="button" class="tab-btn active" id="tab-local">Local</button>
+        <button type="button" class="tab-btn" id="tab-especialidade">Especialidade</button>
+      </div>
+      
+      <div class="buscar-content" id="content-local">
+        <div class="buscar-selects">
+          <select id="estado" name="estado" class="buscar-select" required>
+            <option value="">Estado</option>
+          </select>
+          <select id="cidade" name="cidade" class="buscar-select" required disabled>
+            <option value="">Cidade</option>
+          </select>
+          <select id="bairro" name="bairro" class="buscar-select" required disabled>
+            <option value="">Bairro</option>
+          </select>
+        </div>
+        
+        <div class="bairros-lista" id="bairros-lista">
+          <!-- Bairros aparecerão aqui dinamicamente -->
+        </div>
+      </div>
+      
+      <div class="buscar-content" id="content-especialidade" style="display: none;">
+        <div class="modalidades-lista">
+          {% for modalidade in modalidades %}
+          <label class="modalidade-item">
+            <input type="radio" name="modalidade" value="{{ modalidade }}" required>
+            <span class="modalidade-texto">{{ modalidade }}</span>
+            <div class="modalidade-toggle"></div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <button type="submit" class="buscar-btn" id="buscar-btn" disabled>Buscar</button>
+    </form>
+  </div>
+  
+  <script src="{{ url_for('static', filename='buscar.js') }}"></script>
+</body>
+</html>

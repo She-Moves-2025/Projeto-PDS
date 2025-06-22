@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados da Busca</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='resultados.css') }}">
+</head>
+<body>
+  <div class="resultados-container">
+    <div class="resultados-header">
+      <a href="/busca" class="voltar">‹</a>
+      <h1>Buscar</h1>
+      <div class="buscar-menu">⋮</div>
+    </div>
+    
+    <input type="text" class="buscar-input" placeholder="Search" value="{{ busca_info.modalidade }} em {{ busca_info.bairro }}">
+    
+    <div class="resultados-info">
+      <h2>Exibindo resultados para</h2>
+      <h3>{{ busca_info.modalidade }} em {{ busca_info.bairro }}</h3>
+    </div>
+    
+    <div class="profissionais-lista">
+  {% for profissional in profissionais %}
+  <div class="profissional-card">
+    <div class="profissional-info">
+      <h4>{{ profissional.nome }}</h4>
+      <p>📍 {{ profissional.regioes[0].bairro }}</p>
+      <div class="especialidades">
+        {% for modalidade in profissional.modalidades %}
+        <span class="especialidade-tag">{{ modalidade.nome }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="profissional-foto">
+      {% if profissional.perfil and profissional.perfil.imagem_perfil %}
+        <img src="{{ url_for('static', filename=profissional.perfil.imagem_perfil.split('static/')[-1]) }}">
+      {% else %}
+        <img src="{{ url_for('static', filename='imagens/avatar-default.png') }}">
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="sem-resultados">
+    <p>Nenhum profissional encontrado para os filtros selecionados.</p>
+  </div>
+  {% endfor %}
+</div>
+  </div>
+</body>
+</html>
