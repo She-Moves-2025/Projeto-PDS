@@ -291,10 +291,14 @@ def api_bairros(id_cidade):
     return jsonify({'result': []}), resp.status_code
 
 # --- TELA DE CADASTRO DE REGIÃO E MODALIDADE ---
+
 @app.route('/modalidade-local', methods=['GET', 'POST'])
 def modalidade_local():
-    if 'id' not in session or session.get('tipo') != 'profissional':
+    if 'id' not in session:
         return redirect('/')
+
+    if session.get('tipo') == 'cliente':
+        return redirect('/busca')
 
     profissional_id = session['id']
 
@@ -352,6 +356,7 @@ def modalidade_local():
         regioes=regioes_list,
         modalidades_salvas=modalidades_salvas
     )
+
 # ========== ROTA: Esqueceu a senha  ===========
 @app.route('/esqueceu-senha', methods=['GET', 'POST'])
 def esqueceu_senha():
@@ -410,8 +415,11 @@ def meu_perfil():
 
 @app.route('/busca', methods=['GET', 'POST'])
 def buscar():
-    if 'id' not in session or session.get('tipo') != 'cliente':
+    if 'id' not in session:
         return redirect('/')
+    
+    if session.get('tipo') == 'profissional':
+        return redirect('/modalidade-local')
 
     modalidades_disponiveis = [
         'Pilates', 'Musculação', 'Yoga', 'Fit Dance', 'Boxe',
@@ -430,9 +438,12 @@ def buscar():
 
 @app.route('/resultados')
 def resultados_busca():
-    if 'id' not in session or session.get('tipo') != 'cliente':
+    if 'id' not in session:
         return redirect('/')
 
+    if session.get('tipo') == 'profissional':
+        return redirect('/modalidade-local')
+    
     estado = request.args.get('estado', '').strip()
     cidade = request.args.get('cidade', '').strip()
     bairro = request.args.get('bairro', '').strip().lower()
