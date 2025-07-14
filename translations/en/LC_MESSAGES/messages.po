@@ -1,0 +1,67 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-07-13 23:17-0300\n"
+"PO-Revision-Date: 2025-07-13 23:17-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "Bem-Vinda"
+msgstr "Welcome"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Senha"
+msgstr "Password"
+
+msgid "seuemail@aqui"
+msgstr "youremail@here"
+
+msgid "Esqueceu a senha?"
+msgstr "Forgot your password?"
+
+msgid "Log In"
+msgstr "Log In"
+
+msgid "Ainda não tem uma conta?"
+msgstr "Don't have an account yet?"
+
+msgid "Cadastre-se"
+msgstr "Sign up"
+
+msgid "E-mail já cadastrado."
+msgstr "Email already registered."
+
+msgid "CPF já cadastrado."
+msgstr "CPF already registered."
+
+msgid "Documentos enviados com sucesso! Aguarde aprovação."
+msgstr "Documents successfully submitted! Awaiting approval."
+
+msgid "Adicione ao menos um local de atendimento."
+msgstr "Please add at least one service location."
+
+msgid "Perfil atualizado com sucesso!"
+msgstr "Profile successfully updated!"
+
+msgid "Usuária não encontrada."
+msgstr "User not found."
+
+msgid "Senha incorreta."
+msgstr "Incorrect password."
+
+msgid "Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha."
+msgstr "If this email is registered, you will receive instructions to reset your password."

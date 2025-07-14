@@ -8,17 +8,34 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
+from flask_babel import Babel, _
 import os
 import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+def get_locale():
+    return session.get('lang', 'pt')
+
+babel = Babel(default_locale='pt', locale_selector=get_locale)
+
+# Configuração de idiomas
+app.config['BABEL_DEFAULT_LOCALE'] = 'pt'
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
+
+babel = Babel(app)
+
 db.init_app(app)
 
 # Cria as tabelas no banco
 with app.app_context():
     db.create_all()
+
+@app.route('/change_lang/<lang>')
+def change_lang(lang):
+    session['lang'] = lang
+    return redirect(request.referrer or url_for('home'))
 
 # ========== ROTA: Home =============
 @app.route('/')
@@ -44,12 +61,12 @@ def cadastro_cliente():
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
-            flash('E-mail já cadastrado.', 'error')
+            flash(_('E-mail já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
         # Verifica se já existe cliente com esse CPF
         if Cliente.query.filter_by(cpf=cpf).first():
-            flash('CPF já cadastrado.', 'error')
+            flash(_('CPF já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
         # Cria cliente
@@ -86,12 +103,12 @@ def cadastro_profissional():
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
-            flash('E-mail já cadastrado.', 'error')
+            flash(_('E-mail já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Verifica se já existe cliente com esse CPF
         if Profissional.query.filter_by(cpf=cpf).first():
-            flash('CPF já cadastrado.', 'error')
+            flash(_('CPF já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Cria cliente
@@ -157,7 +174,7 @@ def envio_documentos():
         usuaria.selfie = selfie_rel
         db.session.commit()
 
-        flash('Documentos enviados com sucesso! Aguarde aprovação.')
+        flash(_('Documentos enviados com sucesso! Aguarde aprovação.'))
         return redirect('/aguardando-aprovacao')
 
     return render_template('envio-documentos.html')
@@ -181,11 +198,11 @@ def login():
     login_user = Login.query.filter_by(email=email).first()
 
     if not login_user:
-        flash('Usuária não encontrada.')
+        flash(_('Usuária não encontrada.'))
         return redirect('/')
     
     if not check_password_hash(login_user.senha, senha):
-        flash('Senha incorreta.')
+        flash(_('Senha incorreta.'))
         return redirect('/')
 
     perfil = Perfil.query.get(login_user.id_perfil)
@@ -336,10 +353,10 @@ def modalidade_local():
         db.session.commit()
 
         if locais_salvos > 0:
-            flash('Configuração salva com sucesso!', 'sucess')
+            flash(_('Configuração salva com sucesso!'), 'sucess')
             return redirect('/agenda')  # Redireciona para a página inicial
         else:
-            flash('Adicione ao menos um local de atendimento.', 'error')
+            flash(_('Adicione ao menos um local de atendimento.'), 'error')
             # Não redireciona, apenas recarrega a página mostrando a mensagem
 
     # Carrega dados já cadastrados
@@ -363,7 +380,7 @@ def esqueceu_senha():
     if request.method == 'POST':
         email = request.form['email']
         
-        flash('Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.')
+        flash(_('Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.'))
         return redirect('/esqueceu-senha')
     return render_template('esqueceu-senha.html')
 
@@ -406,7 +423,7 @@ def meu_perfil():
             perfil.imagem_perfil = upload_path
 
         db.session.commit()
-        flash('Perfil atualizado com sucesso!', 'success')
+        flash(_('Perfil atualizado com sucesso!'), 'success')
         return redirect(url_for('meu_perfil'))
 
     return render_template('meu-perfil.html', perfil=perfil, email=login.email if login else '')
