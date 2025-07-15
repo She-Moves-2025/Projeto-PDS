@@ -141,3 +141,21 @@ body {
   font-size: 0.9rem;
 }
 
+.btn-chat {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 18px;
+  background: #48e0c7;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.3s ease;
+}
+
+.btn-chat:hover {
+  background: #3ac3ad;
+}
+
+

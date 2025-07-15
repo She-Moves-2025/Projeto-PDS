@@ -105,4 +105,4 @@ class Chat(db.Model):
     destinatario_id = db.Column(db.Integer)
     mensagem = db.Column(db.Text)
     lida = db.Column(db.Boolean, default=False)
-    timestamp = db.Column(db.DateTime, default=datetime)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat_list.css') }}">
+  <title>Conversas Recentes</title>
+</head>
+<body data-id="{{ session['id'] }}" data-tipo="{{ session['tipo'] }}">
+  <h2>Conversas Recentes</h2>
+  <ul>
+    {% for p in pessoas %}
+      <li>
+        <a href="{{ url_for('chat', id_destino=p.id) }}">
+          {{ p.nome }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+
+    const meuId = parseInt(document.body.dataset.id);
+    const meuTipo = document.body.dataset.tipo;
+
+    socket.on('nova_mensagem', (data) => {
+      const idEsperado = data.destinatario_id;
+
+      if (idEsperado === meuId) {
+        alert('Você recebeu uma nova mensagem!');
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>

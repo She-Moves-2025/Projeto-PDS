@@ -8,11 +8,16 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
+from flask_socketio import SocketIO, emit, join_room
+import eventlet
+import base64
 import os
 import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+socketio = SocketIO(app, async_mode='eventlet')
 
 db.init_app(app)
 
@@ -438,7 +443,7 @@ def resultados_busca():
     bairro = request.args.get('bairro', '').strip().lower()
     modalidade = request.args.get('modalidade', '').strip().lower()
 
-    # Query corrigida
+
     profissionais = Profissional.query\
         .join(Regiao)\
         .join(Modalidade)\
@@ -462,14 +467,137 @@ def resultados_busca():
 # ========== Lista Chat===========
 @app.route('/lista-chat')
 def listachat():
-    return render_template('lista-chat.html')
+    if 'id' not in session or 'tipo' not in session:
+        return redirect('/')
+
+    id_usuario = session['id']
+    tipo = session['tipo']
+
+    if tipo == 'cliente':
+        chats = Chat.query.filter(
+            (Chat.remetente_id == id_usuario) | (Chat.destinatario_id == id_usuario)
+        ).all()
+        ids = set()
+        for c in chats:
+            if c.remetente_id != id_usuario:
+                ids.add(c.remetente_id)
+            elif c.destinatario_id != id_usuario:
+                ids.add(c.destinatario_id)
+        profissionais = Profissional.query.filter(Profissional.id.in_(ids)).all()
+        return render_template('lista-chat.html', pessoas=profissionais, tipo='cliente')
+
+    elif tipo == 'profissional':
+        chats = Chat.query.filter(
+            (Chat.remetente_id == id_usuario) | (Chat.destinatario_id == id_usuario)
+        ).all()
+        ids = set()
+        for c in chats:
+            if c.remetente_id != id_usuario:
+                ids.add(c.remetente_id)
+            elif c.destinatario_id != id_usuario:
+                ids.add(c.destinatario_id)
+        clientes = Cliente.query.filter(Cliente.id.in_(ids)).all()
+        return render_template('lista-chat.html', pessoas=clientes, tipo='profissional')
+
+
+@app.route('/chat/<int:id_destino>')
+def chat(id_destino):
+    if 'id' not in session or 'tipo' not in session:
+        return redirect('/')
+
+    id_usuario = session['id']
+    tipo = session['tipo']
+
+    if tipo == 'cliente':
+        sala = f"cliente_{id_usuario}_prof_{id_destino}"
+        outra_pessoa = Profissional.query.get(id_destino)
+    else:
+        sala = f"cliente_{id_destino}_prof_{id_usuario}"
+        outra_pessoa = Cliente.query.get(id_destino)
+
+    historico = Chat.query.filter(
+        ((Chat.remetente_id == id_usuario) & (Chat.destinatario_id == id_destino)) |
+        ((Chat.remetente_id == id_destino) & (Chat.destinatario_id == id_usuario))
+    ).order_by(Chat.timestamp).all()
+
+    return render_template(
+        'chat.html',
+        sala=sala,
+        outra_pessoa=outra_pessoa,
+        historico=historico
+    )
+
+@socketio.on('entrar')
+def entrar(data):
+    join_room(data['sala'])
+
+@socketio.on('mensagem')
+def handle_mensagem(data):
+    remetente_id = session.get('id')
+    tipo_remetente = session.get('tipo')
+    sala = data['sala']
+    tipo_msg = data['tipo']
+
+    # Determinar o ID do destinatário
+    partes = sala.replace("cliente_", "").replace("prof_", "").split("_")
+    if tipo_remetente == 'cliente':
+        destinatario_id = int(partes[1])
+    else:
+        destinatario_id = int(partes[0])
+
+    if tipo_msg == 'texto':
+        msg = data.get('msg')
+        nova_msg = Chat(
+            remetente_id=remetente_id,
+            destinatario_id=destinatario_id,
+            mensagem=msg
+        )
+        db.session.add(nova_msg)
+        db.session.commit()
+
+        # envia a mensagem para quem estiver na sala
+        emit('mensagem', {
+            'msg': msg,
+            'remetente': tipo_remetente,
+            'tipo': 'texto'
+        }, to=sala)
+
+        # envia notificação de nova mensagem globalmente
+        emit('nova_mensagem', {
+            'remetente_id': remetente_id,
+            'destinatario_id': destinatario_id,
+            'msg': msg
+        }, broadcast=True)
+
+    elif tipo_msg == 'audio':
+        base64_audio = data.get('audio')
+        nova_msg = Chat(
+            remetente_id=remetente_id,
+            destinatario_id=destinatario_id,
+            mensagem=base64_audio
+        )
+        db.session.add(nova_msg)
+        db.session.commit()
+
+        emit('mensagem', {
+            'audio': base64_audio,
+            'remetente': tipo_remetente,
+            'tipo': 'audio'
+        }, to=sala)
+
+        emit('nova_mensagem', {
+            'remetente_id': remetente_id,
+            'destinatario_id': destinatario_id,
+            'msg': '[áudio]'
+        }, broadcast=True)
+
 
 # ========== Notificações ===========
 @app.route('/notifiçações')
 def notificacoes():
     return render_template('notificações.html')
 
-
 # ========== Rodar servidor ===========
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
+

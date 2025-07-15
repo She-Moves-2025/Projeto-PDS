@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <a href="/lista-chat" class="back-button">‹</a>
+      <img src="{{ url_for('static', filename='imagens/avatar-default.png') }}" class="profile-pic">
+      <span class="chat-name">{{ outra_pessoa.nome }}</span>
+    </div>
+
+    <div id="chat-box" class="chat-box">
+      {% for m in historico %}
+        {% if m.mensagem.startswith('data:audio') %}
+          <div class="message {{ 'sent' if m.remetente_id == session['id'] else 'received' }}">
+            <audio controls src="{{ m.mensagem }}"></audio>
+            <span class="time">{{ m.timestamp.strftime('%H:%M') }}</span>
+          </div>
+        {% else %}
+          <div class="message {{ 'sent' if m.remetente_id == session['id'] else 'received' }}">
+            {{ m.mensagem }}
+            <span class="time">{{ m.timestamp.strftime('%H:%M') }}</span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="chat-input-container">
+      <input id="mensagem" type="text" placeholder="Escreva aqui..." />
+      <button onclick="enviarMensagem()">➤</button>
+      <input type="file" accept="audio/*" id="audioInput" style="display: none" onchange="enviarAudio(this)">
+      <button onclick="document.getElementById('audioInput').click()">🎤</button>
+    </div>
+  </div>
+
+  <script>
+    const socket = io();
+    const sala = "{{ sala }}";
+
+    socket.on('connect', () => {
+      socket.emit('entrar', { sala: sala });
+    });
+
+    socket.on('mensagem', (data) => {
+      const box = document.getElementById("chat-box");
+      let el = document.createElement("div");
+      el.classList.add("message");
+      el.classList.add(data.remetente === "{{ session['tipo'] }}" ? "sent" : "received");
+
+      if (data.tipo === 'texto') {
+        el.innerHTML = `${data.msg}<span class="time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+      } else {
+        el.innerHTML = `<audio controls src="${data.audio}"></audio><span class="time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+      }
+
+      box.appendChild(el);
+      box.scrollTop = box.scrollHeight;
+    });
+
+    function enviarMensagem() {
+      const msg = document.getElementById("mensagem");
+      if (msg.value.trim() !== "") {
+        socket.emit('mensagem', { msg: msg.value, sala: sala, tipo: 'texto' });
+        msg.value = "";
+      }
+    }
+
+    function enviarAudio(input) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const base64 = e.target.result;
+        socket.emit('mensagem', { audio: base64, sala: sala, tipo: 'audio' });
+    };
+    if (file) reader.readAsDataURL(file);
+    }
+
+
+  </script>
+</body>
+</html>

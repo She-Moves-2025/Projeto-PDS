@@ -1,0 +1,11 @@
+venv/
+node_modules/
+__pycache__/
+*.pyc
+*.log
+package-lock.json
+.env
+.mypy_cache/
+build/
+dist/
+.DS_Store

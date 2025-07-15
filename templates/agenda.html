@@ -75,7 +75,11 @@
 
  <nav>
   <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
-  <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+  {% if session['tipo'] == 'profissional' %}
+   <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+  {% elif session['tipo'] == 'cliente' %}
+   <a href="{{ url_for('buscar') }}"><i class="fas fa-dumbbell"></i></a>
+  {% endif %}
   <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
   <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
 </nav>
