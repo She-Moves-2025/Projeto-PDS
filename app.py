@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
+from flask_babel import Babel, _
 from flask_socketio import SocketIO, emit, join_room
 import eventlet
 import base64
@@ -19,11 +20,25 @@ app.config.from_object(Config)
 
 socketio = SocketIO(app, async_mode='eventlet')
 
+def get_locale():
+    return session.get('lang', 'pt')
+
+babel = Babel(app, locale_selector=get_locale)
+
+# Configuração de idiomas
+app.config['BABEL_DEFAULT_LOCALE'] = 'pt'
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
+
 db.init_app(app)
 
 # Cria as tabelas no banco
 with app.app_context():
     db.create_all()
+
+@app.route('/change_lang/<lang>')
+def change_lang(lang):
+    session['lang'] = lang
+    return redirect(request.referrer or url_for('home'))
 
 # ========== ROTA: Home =============
 @app.route('/')
@@ -49,12 +64,12 @@ def cadastro_cliente():
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
-            flash('E-mail já cadastrado.', 'error')
+            flash(_('E-mail já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
         # Verifica se já existe cliente com esse CPF
         if Cliente.query.filter_by(cpf=cpf).first():
-            flash('CPF já cadastrado.', 'error')
+            flash(_('CPF já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
         # Cria cliente
@@ -91,12 +106,12 @@ def cadastro_profissional():
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
-            flash('E-mail já cadastrado.', 'error')
+            flash(_('E-mail já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Verifica se já existe cliente com esse CPF
         if Profissional.query.filter_by(cpf=cpf).first():
-            flash('CPF já cadastrado.', 'error')
+            flash(_('CPF já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Cria cliente
@@ -162,7 +177,7 @@ def envio_documentos():
         usuaria.selfie = selfie_rel
         db.session.commit()
 
-        flash('Documentos enviados com sucesso! Aguarde aprovação.')
+        flash(_('Documentos enviados com sucesso! Aguarde aprovação.'))
         return redirect('/aguardando-aprovacao')
 
     return render_template('envio-documentos.html')
@@ -186,11 +201,11 @@ def login():
     login_user = Login.query.filter_by(email=email).first()
 
     if not login_user:
-        flash('Usuária não encontrada.')
+        flash(_('Usuária não encontrada.'))
         return redirect('/')
     
     if not check_password_hash(login_user.senha, senha):
-        flash('Senha incorreta.')
+        flash(_('Senha incorreta.'))
         return redirect('/')
 
     perfil = Perfil.query.get(login_user.id_perfil)
@@ -202,6 +217,7 @@ def login():
 
         session['id'] = cliente.id
         session['tipo'] = 'cliente'
+        session['user_name'] = cliente.nome
         return redirect('/agenda')
 
     elif perfil.id_profissional:
@@ -211,6 +227,7 @@ def login():
 
           session['id'] = profissional.id
           session['tipo'] = 'profissional'
+          session['user_name'] = profissional.nome
 
           tem_regioes = Regiao.query.filter_by(id_profissional=profissional.id).first()
           tem_modalidades = Modalidade.query.filter_by(id_profissional=profissional.id).first()
@@ -224,7 +241,7 @@ def agenda():
     if 'id' not in session:
         return redirect('/')
 
-    return render_template('agenda.html')
+    return render_template('agenda.html', user_name=session.get('user_name'))
 
 # ========== ROTA: Painel MASTER ===========
 @app.route('/painel-master')
@@ -296,10 +313,14 @@ def api_bairros(id_cidade):
     return jsonify({'result': []}), resp.status_code
 
 # --- TELA DE CADASTRO DE REGIÃO E MODALIDADE ---
+
 @app.route('/modalidade-local', methods=['GET', 'POST'])
 def modalidade_local():
-    if 'id' not in session or session.get('tipo') != 'profissional':
+    if 'id' not in session:
         return redirect('/')
+
+    if session.get('tipo') == 'cliente':
+        return redirect('/busca')
 
     profissional_id = session['id']
 
@@ -337,10 +358,10 @@ def modalidade_local():
         db.session.commit()
 
         if locais_salvos > 0:
-            flash('Configuração salva com sucesso!', 'sucess')
+            flash(_('Configuração salva com sucesso!'), 'sucess')
             return redirect('/agenda')  # Redireciona para a página inicial
         else:
-            flash('Adicione ao menos um local de atendimento.', 'error')
+            flash(_('Adicione ao menos um local de atendimento.'), 'error')
             # Não redireciona, apenas recarrega a página mostrando a mensagem
 
     # Carrega dados já cadastrados
@@ -357,13 +378,14 @@ def modalidade_local():
         regioes=regioes_list,
         modalidades_salvas=modalidades_salvas
     )
+
 # ========== ROTA: Esqueceu a senha  ===========
 @app.route('/esqueceu-senha', methods=['GET', 'POST'])
 def esqueceu_senha():
     if request.method == 'POST':
         email = request.form['email']
         
-        flash('Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.')
+        flash(_('Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.'))
         return redirect('/esqueceu-senha')
     return render_template('esqueceu-senha.html')
 
@@ -406,7 +428,7 @@ def meu_perfil():
             perfil.imagem_perfil = upload_path
 
         db.session.commit()
-        flash('Perfil atualizado com sucesso!', 'success')
+        flash(_('Perfil atualizado com sucesso!'), 'success')
         return redirect(url_for('meu_perfil'))
 
     return render_template('meu-perfil.html', perfil=perfil, email=login.email if login else '')
@@ -415,8 +437,11 @@ def meu_perfil():
 
 @app.route('/busca', methods=['GET', 'POST'])
 def buscar():
-    if 'id' not in session or session.get('tipo') != 'cliente':
+    if 'id' not in session:
         return redirect('/')
+    
+    if session.get('tipo') == 'profissional':
+        return redirect('/modalidade-local')
 
     modalidades_disponiveis = [
         'Pilates', 'Musculação', 'Yoga', 'Fit Dance', 'Boxe',
@@ -435,9 +460,12 @@ def buscar():
 
 @app.route('/resultados')
 def resultados_busca():
-    if 'id' not in session or session.get('tipo') != 'cliente':
+    if 'id' not in session:
         return redirect('/')
 
+    if session.get('tipo') == 'profissional':
+        return redirect('/modalidade-local')
+    
     estado = request.args.get('estado', '').strip()
     cidade = request.args.get('cidade', '').strip()
     bairro = request.args.get('bairro', '').strip().lower()

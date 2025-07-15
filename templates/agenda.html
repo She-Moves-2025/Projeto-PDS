@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="{{ g.get('babel_locale', 'pt') }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,14 +18,14 @@
 <body>
   <header>
     <div class="greeting">
-      <div>Olá, <span>{{ user_name }}</span></div>
-      <small>É hora de testar seus limites</small>
+      <div>{{ _("Olá,") }} <span>{{ user_name }}</span></div>
+      <small>{{ _("É hora de testar seus limites") }}</small>
     </div>
     <div class="menu" onclick="toggleMenu()">
       <i class="fas fa-ellipsis-v"></i>
     </div>
     <div class="menu-dropdown" id="dropdownMenu">
-      <a href="{{ url_for('meu_perfil') }}">Meu Perfil</a>
+      <a href="{{ url_for('meu_perfil') }}">{{ _("Meu Perfil") }}</a>
     </div>
   </header>
 
@@ -36,18 +36,18 @@
       <button onclick="changeMonth(1)">&gt;</button>
     </div>
     <div class="weekdays">
-      <div>DOM</div>
-      <div>SEG</div>
-      <div>TER</div>
-      <div>QUA</div>
-      <div>QUI</div>
-      <div>SEX</div>
-      <div>SAB</div>
+      <div>{{ _("DOM") }}</div>
+      <div>{{ _("SEG") }}</div>
+      <div>{{ _("TER") }}</div>
+      <div>{{ _("QUA") }}</div>
+      <div>{{ _("QUI") }}</div>
+      <div>{{ _("SEX") }}</div>
+      <div>{{ _("SAB") }}</div>
     </div>
     <div class="calendar-grid" id="calendarGrid"></div>
   </section>
 
-  <div class="section-title">Agendamentos</div>
+  <div class="section-title">{{ _("Agendamentos") }}</div>
   {% for agendamento in agendamentos %}
   <div class="event-card">
     <div class="event-info">
@@ -59,7 +59,7 @@
   {% endfor %}
 
   <div class="recent-section">
-    <div class="recent-title">Últimos Agendamentos</div>
+    <div class="recent-title">{{ _("Últimos Agendamentos") }}</div>
     <div class="recent-cards">
       {% for item in ultimos_agendamentos %}
       <div class="recent-card">
