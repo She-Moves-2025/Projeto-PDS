@@ -18,13 +18,11 @@ app.config.from_object(Config)
 def get_locale():
     return session.get('lang', 'pt')
 
-babel = Babel(default_locale='pt', locale_selector=get_locale)
+babel = Babel(app, locale_selector=get_locale)
 
 # Configuração de idiomas
 app.config['BABEL_DEFAULT_LOCALE'] = 'pt'
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
-
-babel = Babel(app)
 
 db.init_app(app)
 
