@@ -212,6 +212,7 @@ def login():
 
         session['id'] = cliente.id
         session['tipo'] = 'cliente'
+        session['user_name'] = cliente.nome
         return redirect('/agenda')
 
     elif perfil.id_profissional:
@@ -221,6 +222,7 @@ def login():
 
           session['id'] = profissional.id
           session['tipo'] = 'profissional'
+          session['user_name'] = profissional.nome
 
           tem_regioes = Regiao.query.filter_by(id_profissional=profissional.id).first()
           tem_modalidades = Modalidade.query.filter_by(id_profissional=profissional.id).first()
@@ -234,7 +236,7 @@ def agenda():
     if 'id' not in session:
         return redirect('/')
 
-    return render_template('agenda.html')
+    return render_template('agenda.html', user_name=session.get('user_name'))
 
 # ========== ROTA: Painel MASTER ===========
 @app.route('/painel-master')
