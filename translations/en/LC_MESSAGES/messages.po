@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-07-14 21:45-0300\n"
-"PO-Revision-Date: 2025-07-14 21:47-0300\n"
+"POT-Creation-Date: 2025-07-16 00:18-0300\n"
+"PO-Revision-Date: 2025-07-16 00:20-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
@@ -18,43 +18,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:64 app.py:106
+#: app.py:67 app.py:109
 msgid "E-mail já cadastrado."
-msgstr ""
+msgstr "E-mail already registered."
 
-#: app.py:69 app.py:111
+#: app.py:72 app.py:114
 msgid "CPF já cadastrado."
-msgstr ""
+msgstr "CPF already registered."
 
-#: app.py:177
+#: app.py:180
 msgid "Documentos enviados com sucesso! Aguarde aprovação."
-msgstr ""
+msgstr "Documents sent successfully! Awaiting approval."
 
-#: app.py:201
+#: app.py:204
 msgid "Usuária não encontrada."
-msgstr ""
+msgstr "User not found."
 
-#: app.py:205
+#: app.py:208
 msgid "Senha incorreta."
-msgstr ""
+msgstr "Incorrect password."
 
-#: app.py:356
+#: app.py:361
 msgid "Configuração salva com sucesso!"
-msgstr ""
+msgstr "Settings saved successfully!"
 
-#: app.py:359
+#: app.py:364
 msgid "Adicione ao menos um local de atendimento."
-msgstr ""
+msgstr "Please add at least one service location."
 
-#: app.py:383
+#: app.py:388
 msgid ""
 "Se este e-mail estiver cadastrado, você receberá instruções para "
 "redefinir sua senha."
-msgstr ""
+msgstr "If this e-mail is registered, you will receive instructions to reset your password."
 
-#: app.py:426
+#: app.py:431
 msgid "Perfil atualizado com sucesso!"
-msgstr ""
+msgstr "Profile updated successfully!"
 
 #: templates/agenda.html:21
 msgid "Olá,"
@@ -62,11 +62,11 @@ msgstr "Hello,"
 
 #: templates/agenda.html:22
 msgid "É hora de testar seus limites"
-msgstr ""
+msgstr "It's time to test your limits"
 
 #: templates/agenda.html:28
 msgid "Meu Perfil"
-msgstr ""
+msgstr "My Profile"
 
 #: templates/agenda.html:39
 msgid "DOM"
@@ -82,7 +82,7 @@ msgstr "TUE"
 
 #: templates/agenda.html:42
 msgid "QUA"
-msgstr "WEN"
+msgstr "WED"
 
 #: templates/agenda.html:43
 msgid "QUI"
@@ -98,39 +98,244 @@ msgstr "SAT"
 
 #: templates/agenda.html:50
 msgid "Agendamentos"
-msgstr ""
+msgstr "Appointments"
 
 #: templates/agenda.html:62
 msgid "Últimos Agendamentos"
-msgstr ""
+msgstr "Latest Appointments"
 
-#: templates/login.html:23
+#: templates/aguardando.html:5
+msgid "Aguardando Aprovação"
+msgstr "Awaiting Approval"
+
+#: templates/aguardando.html:11
+msgid "Seu cadastro está em análise"
+msgstr "Your registration is under review"
+
+#: templates/aguardando.html:12
+msgid "Por favor, aguarde até que seus documentos sejam verificados."
+msgstr "Please wait until your documents are verified."
+
+#: templates/busca.html:5 templates/busca.html:13 templates/busca.html:55
+#: templates/resultados.html:14
+msgid "Buscar"
+msgstr "Search"
+
+#: templates/busca.html:18
+msgid "Pesquisa"
+msgstr "Search"
+
+#: templates/busca.html:21 templates/modalidade-local.html:17
+msgid "Local"
+msgstr "Location"
+
+#: templates/busca.html:22 templates/modalidade-local.html:18
+msgid "Especialidade"
+msgstr "Specialty"
+
+#: templates/busca.html:28 templates/modalidade-local.html:32
+msgid "Estado"
+msgstr "State"
+
+#: templates/busca.html:31 templates/modalidade-local.html:35
+msgid "Cidade"
+msgstr "City"
+
+#: templates/busca.html:34 templates/modalidade-local.html:38
+msgid "Bairro"
+msgstr "Neighborhood"
+
+#: templates/cadastro-cliente.html:7
+msgid "Cadastro Cliente"
+msgstr "Client Registration"
+
+#: templates/cadastro-cliente.html:24 templates/login.html:52
+msgid "Cadastre-se"
+msgstr "Sign up"
+
+#: templates/cadastro-cliente.html:26 templates/cadastro-profissional.html:22
+msgid "Nome completo:"
+msgstr "Full name:"
+
+#: templates/cadastro-cliente.html:29 templates/cadastro-profissional.html:25
+msgid "Data de nascimento:"
+msgstr "Date of birth:"
+
+#: templates/cadastro-cliente.html:32 templates/cadastro-profissional.html:28
+msgid "CPF:"
+msgstr "CPF:"
+
+#: templates/cadastro-cliente.html:35 templates/cadastro-profissional.html:34
+msgid "E-mail:"
+msgstr "E-mail:"
+
+#: templates/cadastro-cliente.html:38 templates/cadastro-profissional.html:37
+msgid "Senha:"
+msgstr "Password:"
+
+#: templates/cadastro-cliente.html:42 templates/cadastro-profissional.html:40
+msgid "• Pelo menos 8 caracteres"
+msgstr "• At least 8 characters"
+
+#: templates/cadastro-cliente.html:43 templates/cadastro-profissional.html:41
+msgid "• Pelo menos 1 número"
+msgstr "• At least 1 number"
+
+#: templates/cadastro-cliente.html:44 templates/cadastro-profissional.html:42
+msgid "• Pelo menos 1 caractere especial"
+msgstr "• At least 1 special character"
+
+#: templates/cadastro-cliente.html:47 templates/cadastro-profissional.html:45
+msgid "Cadastrar"
+msgstr "Register"
+
+#: templates/cadastro-escolha.html:6 templates/cadastro-escolha.html:15
+msgid "O Que Você É?"
+msgstr "What Are You?"
+
+#: templates/cadastro-escolha.html:22
+msgid "Profissional"
+msgstr "Professional"
+
+#: templates/cadastro-escolha.html:28
+msgid "Cliente"
+msgstr "Client"
+
+#: templates/cadastro-profissional.html:6
+msgid "Cadastro Profissional"
+msgstr "Professional Registration"
+
+#: templates/cadastro-profissional.html:20
+msgid "PROFISSIONAL"
+msgstr "PROFESSIONAL"
+
+#: templates/cadastro-profissional.html:31
+msgid "CREF:"
+msgstr "CREF:"
+
+#: templates/envio-documentos.html:6
+msgid "Envio de Documentos"
+msgstr "Document Submission"
+
+#: templates/envio-documentos.html:23
+msgid "Envie os seguintes documentos:"
+msgstr "Send the following documents:"
+
+#: templates/envio-documentos.html:27
+msgid "Carteira de Identidade Nacional (Frente e Verso)"
+msgstr "National Identity Card (Front and Back)"
+
+#: templates/envio-documentos.html:29
+msgid "Necessária para validação de gênero"
+msgstr "Required for gender validation"
+
+#: templates/envio-documentos.html:32 templates/envio-documentos.html:38
+msgid "Selecionar arquivo"
+msgstr "Select file"
+
+#: templates/envio-documentos.html:36
+msgid "Foto segurando o documento:"
+msgstr "Photo holding the document:"
+
+#: templates/envio-documentos.html:42
+msgid "Enviar"
+msgstr "Submit"
+
+#: templates/lista-chat.html:7 templates/lista-chat.html:10
+msgid "Conversas Recentes"
+msgstr "Recent Conversations"
+
+#: templates/login.html:27
 msgid "Bem-Vinda"
 msgstr "Welcome"
 
-#: templates/login.html:35
+#: templates/login.html:39
 msgid "Email"
 msgstr "Email"
 
 #: templates/login.html:40
+msgid "seuemail@aqui"
+msgstr "youremail@here"
+
+#: templates/login.html:44
 msgid "Senha"
 msgstr "Password"
 
-#: templates/login.html:43
+#: templates/login.html:47
 msgid "Esqueceu a senha?"
-msgstr "Forgot password?"
+msgstr "Forgot your password?"
 
-#: templates/login.html:45
+#: templates/login.html:49
 msgid "Log In"
 msgstr "Log In"
 
-#: templates/login.html:48
+#: templates/login.html:52
 msgid "Ainda não tem uma conta?"
-msgstr ""
+msgstr "Don't have an account yet?"
 
-#: templates/login.html:48
-msgid "Cadastre-se"
-msgstr ""
+#: templates/modalidade-local.html:5
+msgid "Configuração Inicial"
+msgstr "Initial Setup"
+
+#: templates/modalidade-local.html:13
+msgid "Configuração de Região e Modalidade"
+msgstr "Region and Modality Setup"
+
+#: templates/modalidade-local.html:43 templates/modalidade-local.html:57
+msgid "Salvar"
+msgstr "Save"
+
+#: templates/notificações.html:24
+msgid "Você recebeu uma nova mensagem"
+msgstr "You received a new message"
+
+#: templates/painel-master.html:5
+msgid "Painel de Verificação"
+msgstr "Verification Panel"
+
+#: templates/painel-master.html:11
+msgid "Painel de Verificação (MASTER)"
+msgstr "Verification Panel (MASTER)"
+
+#: templates/painel-master.html:13
+msgid "Clientes Pendentes"
+msgstr "Pending Clients"
+
+#: templates/painel-master.html:17 templates/painel-master.html:37
+msgid "Nome:"
+msgstr "Name:"
+
+#: templates/painel-master.html:24 templates/painel-master.html:44
+msgid "✔️ Aprovar"
+msgstr "✔️ Approve"
+
+#: templates/painel-master.html:27 templates/painel-master.html:47
+msgid "❌ Recusar"
+msgstr "❌ Reject"
+
+#: templates/painel-master.html:33
+msgid "Profissionais Pendentes"
+msgstr "Pending Professionals"
+
+#: templates/resultados.html:5
+msgid "Resultados da Busca"
+msgstr "Search Results"
+
+#: templates/resultados.html:21
+msgid "Exibindo resultados para"
+msgstr "Showing results for"
+
+#: templates/resultados.html:22
+msgid "em"
+msgstr "in"
+
+#: templates/resultados.html:36
+msgid "Falar com profissional"
+msgstr "Talk to professional"
+
+#: templates/resultados.html:49
+msgid "Nenhum profissional encontrado para os filtros selecionados"
+msgstr "No professionals found for the selected filters"
 
 #: venv/Lib/site-packages/click/_termui_impl.py:600
 #, python-brace-format

@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Configuração Inicial</title>
+  <title>{{ _("Configuração Inicial") }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='modalidade_local.css') }}">
@@ -10,12 +10,12 @@
 <body>
   <div id="js-messages"></div>
   <div class="top-bar">
-    <h2>Configuração de Região e Modalidade</h2>
+    <h2>{{ _("Configuração de Região e Modalidade") }}</h2>
   </div>
   <form id="config-form" method="POST">
     <div class="tabs">
-      <button type="button" class="tab-btn active" id="tab-local">Local</button>
-      <button type="button" class="tab-btn" id="tab-modalidade">Especialidade</button>
+      <button type="button" class="tab-btn active" id="tab-local">{{ _("Local") }}</button>
+      <button type="button" class="tab-btn" id="tab-modalidade">{{ _("Especialidade") }}</button>
     </div>
     <div class="tab-content" id="content-local">
       <div id="locais-lista">
@@ -29,18 +29,18 @@
       </div>
       <div class="local-form">
         <select id="estado" class="select">
-          <option value="">Estado</option>
+          <option value="">{{ _("Estado") }}</option>
         </select>
         <select id="cidade" class="select" disabled>
-          <option value="">Cidade</option>
+          <option value="">{{ _("Cidade") }}</option>
         </select>
         <select id="bairro" class="select" disabled>
-          <option value="">Bairro</option>
+          <option value="">{{ _("Bairro") }}</option>
         </select>
       </div>
       <div class="bottom-bar">
         <button type="button" class="fab" id="add-local-btn">+</button>
-        <button type="button" class="submit-btn" id="go-to-modalidade">Salvar</button>
+        <button type="button" class="submit-btn" id="go-to-modalidade">{{ _("Salvar") }}</button>
       </div>
     </div>
     <div class="tab-content" id="content-modalidade" style="display:none;">
@@ -54,7 +54,7 @@
         {% endfor %}
       </div>
       <div class="bottom-bar">
-        <button type="submit" class="submit-btn">Salvar</button>
+        <button type="submit" class="submit-btn">{{ _("Salvar") }}</button>
       </div>
     </div>
   </form>

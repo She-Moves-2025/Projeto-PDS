@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Envio de Documentos</title>
+  <title>{{ _("Envio de Documentos") }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_documentos.css') }}"> 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,26 +20,26 @@
       <span style="color: rgb(0, 192, 188);">She</span>Moves
     </h1>
     <div class="form-container">
-      <h2 class="form-title">Envie os seguintes documentos:</h2>
+      <h2 class="form-title">{{ _("Envie os seguintes documentos:") }}</h2>
       <form action="/envio-documentos" method="POST" enctype="multipart/form-data">
 
         <label for="documento">
-          Carteira de Identidade Nacional (Frente e Verso)
+          {{ _("Carteira de Identidade Nacional (Frente e Verso)") }}
           <span class="tooltip">?
-            <span class="tooltip-text">Necessária para validação de gênero</span>
+            <span class="tooltip-text">{{ _("Necessária para validação de gênero") }}</span>
           </span>
         </label>
-        <label class="file-label" for="documento">Selecionar arquivo</label>
+        <label class="file-label" for="documento">{{ _("Selecionar arquivo") }}</label>
         <input type="file" id="documento" name="documento" accept="image/*" required>
         <div class="file-name" id="nome-documento"></div>
 
-        <label for="selfie">Foto segurando o documento:</label>
+        <label for="selfie">{{ _("Foto segurando o documento:") }}</label>
         <br>
-        <label class="file-label" for="selfie">Selecionar arquivo</label>
+        <label class="file-label" for="selfie">{{ _("Selecionar arquivo") }}</label>
         <input type="file" id="selfie" name="selfie" accept="image/*" required>
         <div class="file-name" id="nome-selfie"></div>
 
-        <button type="submit">Enviar</button>
+        <button type="submit">{{ _("Enviar") }}</button>
       </form>
     </div>
   </div>

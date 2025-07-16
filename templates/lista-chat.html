@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{{ url_for('static', filename='chat_list.css') }}">
-  <title>Conversas Recentes</title>
+  <title>{{ _("Conversas Recentes") }}</title>
 </head>
 <body data-id="{{ session['id'] }}" data-tipo="{{ session['tipo'] }}">
-  <h2>Conversas Recentes</h2>
+  <h2>{{ _("Conversas Recentes") }}</h2>
   <ul>
     {% for p in pessoas %}
       <li>

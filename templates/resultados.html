@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Resultados da Busca</title>
+  <title>{{ _("Resultados da Busca") }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='resultados.css') }}">
@@ -11,15 +11,15 @@
   <div class="resultados-container">
     <div class="resultados-header">
       <a href="/busca" class="voltar">‹</a>
-      <h1>Buscar</h1>
+      <h1>{{ _("Buscar") }}</h1>
       <div class="buscar-menu">⋮</div>
     </div>
     
     <input type="text" class="buscar-input" placeholder="Search" value="{{ busca_info.modalidade }} em {{ busca_info.bairro }}">
     
     <div class="resultados-info">
-      <h2>Exibindo resultados para</h2>
-      <h3>{{ busca_info.modalidade }} em {{ busca_info.bairro }}</h3>
+      <h2>{{ _("Exibindo resultados para") }}</h2>
+      <h3>{{ busca_info.modalidade }} {{ _("em") }} {{ busca_info.bairro }}</h3>
     </div>
     
     <div class="profissionais-lista">
@@ -33,7 +33,7 @@
         <span class="especialidade-tag">{{ modalidade.nome }}</span>
         {% endfor %}
       </div>
-      <a href="{{ url_for('chat', id_destino=profissional.id) }}" class="btn-chat">Falar com profissional</a>
+      <a href="{{ url_for('chat', id_destino=profissional.id) }}" class="btn-chat">{{ _("Falar com profissional") }}</a>
   </div>
     </div>
     <div class="profissional-foto">
@@ -46,7 +46,7 @@
   </div>
   {% else %}
   <div class="sem-resultados">
-    <p>Nenhum profissional encontrado para os filtros selecionados.</p>
+    <p>{{ _("Nenhum profissional encontrado para os filtros selecionados") }}</p>
   </div>
   {% endfor %}
 </div>

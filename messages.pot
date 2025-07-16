@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-07-14 21:45-0300\n"
+"POT-Creation-Date: 2025-07-16 00:18-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,41 +17,41 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:64 app.py:106
+#: app.py:67 app.py:109
 msgid "E-mail já cadastrado."
 msgstr ""
 
-#: app.py:69 app.py:111
+#: app.py:72 app.py:114
 msgid "CPF já cadastrado."
 msgstr ""
 
-#: app.py:177
+#: app.py:180
 msgid "Documentos enviados com sucesso! Aguarde aprovação."
 msgstr ""
 
-#: app.py:201
+#: app.py:204
 msgid "Usuária não encontrada."
 msgstr ""
 
-#: app.py:205
+#: app.py:208
 msgid "Senha incorreta."
 msgstr ""
 
-#: app.py:356
+#: app.py:361
 msgid "Configuração salva com sucesso!"
 msgstr ""
 
-#: app.py:359
+#: app.py:364
 msgid "Adicione ao menos um local de atendimento."
 msgstr ""
 
-#: app.py:383
+#: app.py:388
 msgid ""
 "Se este e-mail estiver cadastrado, você receberá instruções para "
 "redefinir sua senha."
 msgstr ""
 
-#: app.py:426
+#: app.py:431
 msgid "Perfil atualizado com sucesso!"
 msgstr ""
 
@@ -103,32 +103,237 @@ msgstr ""
 msgid "Últimos Agendamentos"
 msgstr ""
 
-#: templates/login.html:23
+#: templates/aguardando.html:5
+msgid "Aguardando Aprovação"
+msgstr ""
+
+#: templates/aguardando.html:11
+msgid "Seu cadastro está em análise"
+msgstr ""
+
+#: templates/aguardando.html:12
+msgid "Por favor, aguarde até que seus documentos sejam verificados."
+msgstr ""
+
+#: templates/busca.html:5 templates/busca.html:13 templates/busca.html:55
+#: templates/resultados.html:14
+msgid "Buscar"
+msgstr ""
+
+#: templates/busca.html:18
+msgid "Pesquisa"
+msgstr ""
+
+#: templates/busca.html:21 templates/modalidade-local.html:17
+msgid "Local"
+msgstr ""
+
+#: templates/busca.html:22 templates/modalidade-local.html:18
+msgid "Especialidade"
+msgstr ""
+
+#: templates/busca.html:28 templates/modalidade-local.html:32
+msgid "Estado"
+msgstr ""
+
+#: templates/busca.html:31 templates/modalidade-local.html:35
+msgid "Cidade"
+msgstr ""
+
+#: templates/busca.html:34 templates/modalidade-local.html:38
+msgid "Bairro"
+msgstr ""
+
+#: templates/cadastro-cliente.html:7
+msgid "Cadastro Cliente"
+msgstr ""
+
+#: templates/cadastro-cliente.html:24 templates/login.html:52
+msgid "Cadastre-se"
+msgstr ""
+
+#: templates/cadastro-cliente.html:26 templates/cadastro-profissional.html:22
+msgid "Nome completo:"
+msgstr ""
+
+#: templates/cadastro-cliente.html:29 templates/cadastro-profissional.html:25
+msgid "Data de nascimento:"
+msgstr ""
+
+#: templates/cadastro-cliente.html:32 templates/cadastro-profissional.html:28
+msgid "CPF:"
+msgstr ""
+
+#: templates/cadastro-cliente.html:35 templates/cadastro-profissional.html:34
+msgid "E-mail:"
+msgstr ""
+
+#: templates/cadastro-cliente.html:38 templates/cadastro-profissional.html:37
+msgid "Senha:"
+msgstr ""
+
+#: templates/cadastro-cliente.html:42 templates/cadastro-profissional.html:40
+msgid "• Pelo menos 8 caracteres"
+msgstr ""
+
+#: templates/cadastro-cliente.html:43 templates/cadastro-profissional.html:41
+msgid "• Pelo menos 1 número"
+msgstr ""
+
+#: templates/cadastro-cliente.html:44 templates/cadastro-profissional.html:42
+msgid "• Pelo menos 1 caractere especial"
+msgstr ""
+
+#: templates/cadastro-cliente.html:47 templates/cadastro-profissional.html:45
+msgid "Cadastrar"
+msgstr ""
+
+#: templates/cadastro-escolha.html:6 templates/cadastro-escolha.html:15
+msgid "O Que Você É?"
+msgstr ""
+
+#: templates/cadastro-escolha.html:22
+msgid "Profissional"
+msgstr ""
+
+#: templates/cadastro-escolha.html:28
+msgid "Cliente"
+msgstr ""
+
+#: templates/cadastro-profissional.html:6
+msgid "Cadastro Profissional"
+msgstr ""
+
+#: templates/cadastro-profissional.html:20
+msgid "PROFISSIONAL"
+msgstr ""
+
+#: templates/cadastro-profissional.html:31
+msgid "CREF:"
+msgstr ""
+
+#: templates/envio-documentos.html:6
+msgid "Envio de Documentos"
+msgstr ""
+
+#: templates/envio-documentos.html:23
+msgid "Envie os seguintes documentos:"
+msgstr ""
+
+#: templates/envio-documentos.html:27
+msgid "Carteira de Identidade Nacional (Frente e Verso)"
+msgstr ""
+
+#: templates/envio-documentos.html:29
+msgid "Necessária para validação de gênero"
+msgstr ""
+
+#: templates/envio-documentos.html:32 templates/envio-documentos.html:38
+msgid "Selecionar arquivo"
+msgstr ""
+
+#: templates/envio-documentos.html:36
+msgid "Foto segurando o documento:"
+msgstr ""
+
+#: templates/envio-documentos.html:42
+msgid "Enviar"
+msgstr ""
+
+#: templates/lista-chat.html:7 templates/lista-chat.html:10
+msgid "Conversas Recentes"
+msgstr ""
+
+#: templates/login.html:27
 msgid "Bem-Vinda"
 msgstr ""
 
-#: templates/login.html:35
+#: templates/login.html:39
 msgid "Email"
 msgstr ""
 
 #: templates/login.html:40
+msgid "seuemail@aqui"
+msgstr ""
+
+#: templates/login.html:44
 msgid "Senha"
 msgstr ""
 
-#: templates/login.html:43
+#: templates/login.html:47
 msgid "Esqueceu a senha?"
 msgstr ""
 
-#: templates/login.html:45
+#: templates/login.html:49
 msgid "Log In"
 msgstr ""
 
-#: templates/login.html:48
+#: templates/login.html:52
 msgid "Ainda não tem uma conta?"
 msgstr ""
 
-#: templates/login.html:48
-msgid "Cadastre-se"
+#: templates/modalidade-local.html:5
+msgid "Configuração Inicial"
+msgstr ""
+
+#: templates/modalidade-local.html:13
+msgid "Configuração de Região e Modalidade"
+msgstr ""
+
+#: templates/modalidade-local.html:43 templates/modalidade-local.html:57
+msgid "Salvar"
+msgstr ""
+
+#: templates/notificações.html:24
+msgid "Você recebeu uma nova mensagem"
+msgstr ""
+
+#: templates/painel-master.html:5
+msgid "Painel de Verificação"
+msgstr ""
+
+#: templates/painel-master.html:11
+msgid "Painel de Verificação (MASTER)"
+msgstr ""
+
+#: templates/painel-master.html:13
+msgid "Clientes Pendentes"
+msgstr ""
+
+#: templates/painel-master.html:17 templates/painel-master.html:37
+msgid "Nome:"
+msgstr ""
+
+#: templates/painel-master.html:24 templates/painel-master.html:44
+msgid "✔️ Aprovar"
+msgstr ""
+
+#: templates/painel-master.html:27 templates/painel-master.html:47
+msgid "❌ Recusar"
+msgstr ""
+
+#: templates/painel-master.html:33
+msgid "Profissionais Pendentes"
+msgstr ""
+
+#: templates/resultados.html:5
+msgid "Resultados da Busca"
+msgstr ""
+
+#: templates/resultados.html:21
+msgid "Exibindo resultados para"
+msgstr ""
+
+#: templates/resultados.html:22
+msgid "em"
+msgstr ""
+
+#: templates/resultados.html:36
+msgid "Falar com profissional"
+msgstr ""
+
+#: templates/resultados.html:49
+msgid "Nenhum profissional encontrado para os filtros selecionados"
 msgstr ""
 
 #: venv/Lib/site-packages/click/_termui_impl.py:600

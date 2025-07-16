@@ -13,6 +13,43 @@ body {
   justify-content: center;
 }
 
+.language-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1em;
+  justify-content: center;
+  position: fixed;
+  top: 10px; 
+  right: 10px; 
+  z-index: 1000;
+}
+
+.flag-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 2px solid transparent;
+}
+
+.flag-icon:hover {
+  transform: scale(1.1);
+  border-color: #aaa;
+}
+
+.login-container {
+  background: #2D2A32;
+  border-radius: 20px;
+  width: 340px;
+  padding: 32px 24px 24px 24px;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .voltar {
   color: #48e0c7;
   text-decoration: none;

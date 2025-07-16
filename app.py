@@ -1,11 +1,10 @@
-from datetime import datetime
+from datetime import datetime, date
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, current_app 
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from models import db, Profissional, Perfil, Login, Regiao, Modalidade, Cliente, RecuperarSenha, Notificacao, Avaliacao, Agendamento, Pagamento, Chat
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
 from flask_babel import Babel, _
@@ -40,6 +39,13 @@ def change_lang(lang):
     session['lang'] = lang
     return redirect(request.referrer or url_for('home'))
 
+def calcular_idade(data_nascimento):
+    hoje = date.today()
+    return hoje.year - data_nascimento.year - ((hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day))
+
+
+
+
 # ========== ROTA: Home =============
 @app.route('/')
 def home():
@@ -60,6 +66,9 @@ def cadastro_cliente():
         email = request.form['email']
         cpf = request.form['cpf']
         nascimento = request.form['nascimento']
+        data_nascimento_str = request.form.get('nascimento')
+        data_nascimento = datetime.strptime(data_nascimento_str, '%Y-%m-%d').date()
+        idade = calcular_idade(data_nascimento)
         senha = generate_password_hash(request.form['senha'])
 
         # Verifica se já existe um login com esse e-mail
@@ -72,6 +81,10 @@ def cadastro_cliente():
             flash(_('CPF já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
+        if idade < 13:
+            flash(_('Você precisa ter pelo menos 13 anos para se cadastrar.'), 'error')
+            return render_template('cadastro-cliente.html')
+        
         # Cria cliente
         cliente = Cliente(nome=nome, cpf=cpf, data_nascimento=nascimento, validado=False)
         db.session.add(cliente)
@@ -101,6 +114,9 @@ def cadastro_profissional():
         email = request.form['email']
         cpf = request.form['cpf']
         nascimento = request.form['nascimento']
+        data_nascimento_str = request.form.get('nascimento')
+        data_nascimento = datetime.strptime(data_nascimento_str, '%Y-%m-%d').date()
+        idade = calcular_idade(data_nascimento)
         cref = request.form['cref']
         senha = generate_password_hash(request.form['senha'])
 
@@ -112,6 +128,10 @@ def cadastro_profissional():
         # Verifica se já existe cliente com esse CPF
         if Profissional.query.filter_by(cpf=cpf).first():
             flash(_('CPF já cadastrado.'), 'error')
+            return render_template('cadastro-profissional.html')
+        
+        if idade < 13:
+            flash(_('Você precisa ter pelo menos 13 anos para se cadastrar.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Cria cliente
@@ -628,4 +648,3 @@ def notificacoes():
 # ========== Rodar servidor ===========
 if __name__ == '__main__':
     socketio.run(app, debug=True)
-
