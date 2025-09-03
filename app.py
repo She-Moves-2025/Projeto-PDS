@@ -71,6 +71,13 @@ def cadastro_cliente():
         idade = calcular_idade(data_nascimento)
         senha = generate_password_hash(request.form['senha'])
 
+        cpf = ''.join(filter(str.isdigit, cpf))
+
+        # Valida CPF
+        if not validar_cpf(cpf):
+            flash(_('CPF inválido.'), 'error')
+            return render_template('cadastro-profissional.html')
+
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
             flash(_('E-mail já cadastrado.'), 'error')
@@ -120,6 +127,13 @@ def cadastro_profissional():
         cref = request.form['cref']
         senha = generate_password_hash(request.form['senha'])
 
+        cpf = ''.join(filter(str.isdigit, cpf))
+
+        # Valida CPF
+        if not validar_cpf(cpf):
+            flash(_('CPF inválido.'), 'error')
+            return render_template('cadastro-profissional.html')
+
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
             flash(_('E-mail já cadastrado.'), 'error')
@@ -130,8 +144,8 @@ def cadastro_profissional():
             flash(_('CPF já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
         
-        if idade < 13:
-            flash(_('Você precisa ter pelo menos 13 anos para se cadastrar.'), 'error')
+        if idade < 18:
+            flash(_('Você precisa ter pelo menos 18 anos para se cadastrar.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Cria cliente
@@ -329,8 +343,12 @@ def api_bairros(id_cidade):
     resp = requests.get(url, headers=headers)
     if resp.status_code == 200:
         data = resp.json()
-        return jsonify(data.get('result', []))
-    return jsonify({'result': []}), resp.status_code
+        bairros = data.get('result', [])
+
+        # Se cada bairro é um dicionário com chave "name"
+        bairros_ordenados = sorted(bairros, key=lambda b: b.get("name", "").lower())
+
+    return jsonify(bairros_ordenados), resp.status_code
 
 # --- TELA DE CADASTRO DE REGIÃO E MODALIDADE ---
 
@@ -644,6 +662,32 @@ def handle_mensagem(data):
 @app.route('/notifiçações')
 def notificacoes():
     return render_template('notificações.html')
+
+# ========== Notificações ===========
+def validar_cpf(cpf: str) -> bool:
+    cpf = ''.join(filter(str.isdigit, cpf))
+
+    if len(cpf) != 11:
+        return False
+
+    if cpf == cpf[0] * 11:
+        return False
+
+    # Calcula o 1º dígito verificador
+    soma = sum(int(cpf[i]) * (10 - i) for i in range(9))
+    digito1 = (soma * 10 % 11) % 10
+
+    if digito1 != int(cpf[9]):
+        return False
+
+    # Calcula o 2º dígito verificador
+    soma = sum(int(cpf[i]) * (11 - i) for i in range(10))
+    digito2 = (soma * 10 % 11) % 10
+
+    if digito2 != int(cpf[10]):
+        return False
+
+    return True
 
 # ========== Rodar servidor ===========
 if __name__ == '__main__':

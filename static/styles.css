@@ -18,6 +18,10 @@ h1 {
   text-align: center;
 }
 
+p{
+  color: white;
+}
+
 .usuario {
   border: 1px solid #ccc;
   padding: 15px;

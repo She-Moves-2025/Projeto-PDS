@@ -89,4 +89,57 @@ document.addEventListener('DOMContentLoaded', () =>{
       e.preventDefault();
     }
   });
+
+  const cpfInput = document.getElementById("cpf");
+  const crefInput = document.getElementById("cref");
+
+  if (cpfInput) {
+    const aplicarMascaraCPF = (valor) => {
+      
+      let v = valor.replace(/\D/g, "").slice(0, 11);
+
+      v = v.replace(/(\d{3})(\d)/, "$1.$2");
+      v = v.replace(/(\d{3})(\d)/, "$1.$2");
+      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      return v;
+    };
+
+    cpfInput.addEventListener("input", (e) => {
+      e.target.value = aplicarMascaraCPF(e.target.value);
+    });
+
+    cpfInput.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const texto = (e.clipboardData || window.clipboardData).getData("text");
+      cpfInput.value = aplicarMascaraCPF(texto);
+    });
+  }
+
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    let cpfInput = document.getElementById("cpf");
+    cpfInput.value = cpfInput.value.replace(/\D/g, "");
 });
+
+  if (crefInput) {
+    const aplicarMascaraCref = (valor) => {
+      
+      let v = valor.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+
+      v = v.replace(/^(\d{6})([A-Z])/, "$1-$2");
+      v = v.replace(/^(\d{6}-[A-Z])([A-Z]{2})/, "$1/$2");
+      return v;
+    };
+
+    crefInput.addEventListener("input", (e) => {
+      e.target.value = aplicarMascaraCref(e.target.value);
+    });
+
+    crefInput.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const texto = (e.clipboardData || window.clipboardData).getData("text");
+      crefInput.value = aplicarMascaraCref(texto);
+    });
+  }
+});
+
+
