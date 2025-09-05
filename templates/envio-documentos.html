@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="{{ g.get('babel_locale', 'pt') }}">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ _("Envio de Documentos") }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles_documentos.css') }}"> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_documentos.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -14,11 +15,12 @@
 </head>
 
 <body>
+
+  <a href="javascript:history.back()" class="voltar">&lt;</a>
+  <h1 class="logo">
+    <span style="color: rgb(0, 192, 188);">She</span>Moves
+  </h1>
   <div class="container">
-    <a href="javascript:history.back()" class="voltar">&lt;</a>
-    <h1 class="logo">
-      <span style="color: rgb(0, 192, 188);">She</span>Moves
-    </h1>
     <div class="form-container">
       <h2 class="form-title">{{ _("Envie os seguintes documentos:") }}</h2>
       <form action="/envio-documentos" method="POST" enctype="multipart/form-data">

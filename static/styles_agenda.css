@@ -1,4 +1,4 @@
-* {
+/* * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -183,7 +183,6 @@ nav i {
     color: #a887ff;
 }
 
-/* ... todo o estilo que você já tinha ... */
 
 .menu-dropdown {
     position: absolute;
@@ -224,4 +223,4 @@ nav i {
 
 .day[data-active="true"] {
     cursor: pointer;
-}
+} */

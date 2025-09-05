@@ -4,7 +4,7 @@
   margin: 0;
   min-height: 100vh;
 } */
-.top-bar {
+/* .top-bar {
   background: #39363B;
   padding: 20px 0 10px 24px;
   border-radius: 0 0 24px 24px;
@@ -141,4 +141,4 @@
   .tab-content { padding: 8px; }
   .submit-btn, .fab { margin-right: 10px; }
   .local-form { flex-direction: column; }
-}
+} */

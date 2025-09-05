@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{ g.get('babel_locale', 'pt') }}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificação de E-mail</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <h2>Digite o código enviado para {{ email }}</h2>
+  <form method="POST">
+    <input type="text" name="codigo" maxlength="6" required>
+    <button type="submit">Confirmar</button>
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in messages %}
+      <p style="color:red;">{{ msg }}</p>
+    {% endfor %}
+  {% endwith %}
+</body>
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ g.get('babel_locale', 'pt') }}">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,50 +9,60 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_login.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-
-<div class="language-selector">
-  <a href="{{ url_for('change_lang', lang='pt') }}">
-    <img src="{{ url_for('static', filename='imagens/brasil.png') }}" alt="Português" class="flag-icon">
-  </a>
-  <a href="{{ url_for('change_lang', lang='en') }}">
-    <img src="{{ url_for('static', filename='imagens/eua.png') }}" alt="English" class="flag-icon">
-  </a>
-</div>
-
-
-  <div class="login-container">
+  
+  <div class="language-selector">
+    <a href="{{ url_for('change_lang', lang='pt') }}">
+      <img src="{{ url_for('static', filename='imagens/brasil.png') }}" alt="Português" class="flag-icon">
+    </a>
+    <a href="{{ url_for('change_lang', lang='en') }}">
+      <img src="{{ url_for('static', filename='imagens/eua.png') }}" alt="English" class="flag-icon">
+    </a>
+  </div>
+  
+  <div class="container">
     <div class="logo-shemoves">
-           <img src="{{ url_for('static', filename='imagens/logo-shemoves.png') }}"  class="icon-img">
+      <img src="{{ url_for('static', filename='imagens/logo-shemoves.png') }}" class="icon-img">
     </div>
     <h2 class="welcome-title">{{ _("Bem-Vinda") }}</h2>
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-messages">
-          {% for message in messages %}
-            <span>{{ message }}</span>
-          {% endfor %}
-        </div>
-      {% endif %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <span>{{ message }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
     {% endwith %}
+
     <form action="/login" id="login-form" method="POST" autocomplete="off">
       <div class="input-group">
         <label for="email">{{ _("Email") }}</label>
         <input type="email" id="email" name="email" placeholder="{{ _('seuemail@aqui') }}" required>
         <span class="error-message" id="email-error"></span>
       </div>
+
       <div class="input-group">
         <label for="senha">{{ _("Senha") }}</label>
-        <input type="password" id="senha" name="senha" placeholder="********" required>
+        <div class="password-wrapper">
+          <input type="password" id="senha" name="senha" placeholder="********" required>
+          <span class="toggle-password" onclick="togglePassword()">
+            👁️
+          </span>
+        </div>
         <span class="error-message" id="senha-error"></span>
         <a href="/esqueceu-senha" class="forgot-link">{{ _("Esqueceu a senha?") }}</a>
       </div>
+
       <button type="submit" class="login-btn">{{ _("Log In") }}</button>
     </form>
+
     <div class="register-link">
       {{ _("Ainda não tem uma conta?") }} <a href="/cadastro">{{ _("Cadastre-se") }}</a>
     </div>
   </div>
   <script src="{{ url_for('static', filename='login.js') }}"></script>
 </body>
+
 </html>

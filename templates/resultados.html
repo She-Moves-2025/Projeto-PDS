@@ -12,7 +12,7 @@
     <div class="resultados-header">
       <a href="/busca" class="voltar">‹</a>
       <h1>{{ _("Buscar") }}</h1>
-      <div class="buscar-menu">⋮</div>
+      <!-- <div class="buscar-menu">⋮</div> -->
     </div>
     
     <input type="text" class="buscar-input" placeholder="Search" value="{{ busca_info.modalidade }} em {{ busca_info.bairro }}">
@@ -35,13 +35,13 @@
       </div>
       <a href="{{ url_for('chat', id_destino=profissional.id) }}" class="btn-chat">{{ _("Falar com profissional") }}</a>
   </div>
-    </div>
-    <div class="profissional-foto">
-      {% if profissional.perfil and profissional.perfil.imagem_perfil %}
-        <img src="{{ url_for('static', filename=profissional.perfil.imagem_perfil.split('static/')[-1]) }}">
-      {% else %}
-        <img src="{{ url_for('static', filename='imagens/avatar-default.png') }}">
-      {% endif %}
+  <div class="profissional-foto">
+    {% if profissional.perfil and profissional.perfil.imagem_perfil %}
+      <img src="{{ url_for('static', filename=profissional.perfil.imagem_perfil.split('static/')[-1]) }}">
+    {% else %}
+      <img src="{{ url_for('static', filename='imagens/avatar-default.png') }}">
+    {% endif %}
+  </div>
     </div>
   </div>
   {% else %}

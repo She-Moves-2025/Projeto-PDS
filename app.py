@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, current_app 
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
@@ -8,19 +8,33 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
 from flask_babel import Babel, _
+from flask_mail import Mail, Message
 from flask_socketio import SocketIO, emit, join_room
 import eventlet
 import base64
 import os
 import requests
+import random, string
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+app.config['MAIL_SERVER'] = "smtp.gmail.com"
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = "shemoves.sistema@gmail.com"
+app.config['MAIL_PASSWORD'] = "nyla upss ebcv semv"
+   
+mail = Mail(app)
 
 socketio = SocketIO(app, async_mode='eventlet')
 
 def get_locale():
     return session.get('lang', 'pt')
+
+def gerar_codigo():
+    return ''.join(random.choices(string.digits, k=6))
+
 
 babel = Babel(app, locale_selector=get_locale)
 
@@ -106,10 +120,25 @@ def cadastro_cliente():
         db.session.add(login)
         db.session.commit()
 
+        # Gerar código e salvar no Login
+        codigo = gerar_codigo()
+        login.codigo_verificacao = codigo
+        login.expira_em = datetime.utcnow() + timedelta(minutes=5)
+        db.session.commit()
+
+        # Enviar e-mail
+        msg = Message("Verificação de E-mail - SheMoves",
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[login.email])
+        msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
+        mail.send(msg)
+
+        flash(_('Código de verificação enviado para seu e-mail.'), 'info')
+
         session['tipo'] = 'cliente'
         session['id'] = cliente.id
 
-        return redirect('/envio-documentos')
+        return redirect(url_for('verificar_email', email=login.email))
 
     return render_template('cadastro-cliente.html')
 
@@ -161,13 +190,60 @@ def cadastro_profissional():
         login = Login(id_perfil=perfil.id, email=email, senha=senha)
         db.session.add(login)
         db.session.commit()
+        
+        # Gerar código e salvar no Login
+        codigo = gerar_codigo()
+        login.codigo_verificacao = codigo
+        login.expira_em = datetime.utcnow() + timedelta(minutes=5)
+        db.session.commit()
+
+        # Enviar e-mail
+        msg = Message("Verificação de E-mail - SheMoves",
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[login.email])
+        msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
+        mail.send(msg)
+
+        flash(_('Código de verificação enviado para seu e-mail.'), 'info')
 
         session['tipo'] = 'profissional'
         session['id'] = profissional.id
 
-        return redirect('/envio-documentos')
+        return redirect(url_for('verificar_email', email=login.email))
 
     return render_template('cadastro-profissional.html')
+
+# ========== ROTA: Verificação de e-mail ==========
+
+@app.route('/verificar-email', methods=['GET', 'POST'])
+def verificar_email():
+    email = request.args.get("email")
+    login = Login.query.filter_by(email=email).first()
+
+    if not login:
+        flash(_("Usuária não encontrada."), "error")
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        codigo = request.form.get("codigo")
+
+        if login.codigo_verificacao != codigo:
+            flash(_("Código inválido."), "error")
+            return redirect(url_for("verificar_email", email=email))
+
+        if login.expira_em < datetime.utcnow():
+            flash(_("Código expirado, solicite novamente."), "error")
+            return redirect(url_for("verificar_email", email=email))
+
+        login.email_verificado = True
+        login.codigo_verificacao = None  # opcional: limpar
+        db.session.commit()
+
+        flash(_("E-mail verificado com sucesso!"), "success")
+        
+        return redirect("/envio-documentos")
+    
+    return render_template("verificar-email.html", email=email)
 
 # ========== ROTA: Envio de Documentos ==========
 
@@ -241,6 +317,10 @@ def login():
     if not check_password_hash(login_user.senha, senha):
         flash(_('Senha incorreta.'))
         return redirect('/')
+    
+    if not getattr(login_user, "email_verificado", False):
+        flash(_("Confirme seu e-mail antes de continuar."), "warning")
+        return redirect(url_for("verificar_email", email=login_user.email))
 
     perfil = Perfil.query.get(login_user.id_perfil)
 

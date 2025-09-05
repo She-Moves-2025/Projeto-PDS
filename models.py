@@ -1,9 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-
+from datetime import datetime, timedelta
 
 db = SQLAlchemy()
 
+class VerificacaoEmail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    codigo = db.Column(db.String(6), nullable=False)
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+    expira_em = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(minutes=5))
+    verificado = db.Column(db.Boolean, default=False)
 
 class Regiao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -56,6 +62,9 @@ class Login(db.Model):
     id_perfil = db.Column(db.Integer, db.ForeignKey('perfil.id'))
     email = db.Column(db.String(200), unique=True)
     senha = db.Column(db.String)
+    email_verificado = db.Column(db.Boolean, default=False)
+    codigo_verificacao = db.Column(db.String(6))
+    expira_em = db.Column(db.DateTime)
 
 class RecuperarSenha(db.Model):
     id = db.Column(db.Integer, primary_key=True)
