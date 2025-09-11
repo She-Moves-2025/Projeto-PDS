@@ -1,11 +1,11 @@
-/* * {
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 body {
-    background: #2D2A32;
+    background-color: #1e1e1e;
     font-family: 'Oswald', sans-serif;
     color: #fff;
     padding-bottom: 80px;
@@ -223,4 +223,4 @@ nav i {
 
 .day[data-active="true"] {
     cursor: pointer;
-} */
+}

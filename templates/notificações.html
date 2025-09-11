@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notificações</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificações</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
 </head>
+
 <body>
-    <style>
-    .container {
+  <style>
+    /* .container {
   margin: 20px;
-}
-.notification {
-  background: #fff8dc;
-  border-left: 6px solid #ffa500;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
-}
-</style>
-    <div class="container">
-  <div class="notification">
-    {{ _("Você recebeu uma nova mensagem") }}
+} */
+    .notification {
+      background: #fff8dc;
+      border-left: 6px solid #ffa500;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+  <div class="container">
+    <div class="notification">
+      {{ _("Você recebeu uma nova mensagem") }}
+    </div>
   </div>
-</div>
 
 </body>
+
 </html>

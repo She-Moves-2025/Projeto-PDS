@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  
+
   <div class="language-selector">
     <a href="{{ url_for('change_lang', lang='pt') }}">
       <img src="{{ url_for('static', filename='imagens/brasil.png') }}" alt="Português" class="flag-icon">
@@ -20,7 +20,7 @@
       <img src="{{ url_for('static', filename='imagens/eua.png') }}" alt="English" class="flag-icon">
     </a>
   </div>
-  
+
   <div class="container">
     <div class="logo-shemoves">
       <img src="{{ url_for('static', filename='imagens/logo-shemoves.png') }}" class="icon-img">
@@ -46,10 +46,9 @@
       <div class="input-group">
         <label for="senha">{{ _("Senha") }}</label>
         <div class="password-wrapper">
+          <img src="https://cdn0.iconfinder.com/data/icons/ui-icons-pack/100/ui-icon-pack-14-512.png" id="olho"
+            class="olho">
           <input type="password" id="senha" name="senha" placeholder="********" required>
-          <span class="toggle-password" onclick="togglePassword()">
-            👁️
-          </span>
         </div>
         <span class="error-message" id="senha-error"></span>
         <a href="/esqueceu-senha" class="forgot-link">{{ _("Esqueceu a senha?") }}</a>

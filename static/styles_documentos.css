@@ -8,27 +8,11 @@
       font-family: 'Arial', sans-serif;
       background-color: #1e1e1e;
       color: #fff;
-    } */
-
-    /* .container {
+    } 
+      
+    .container {
       margin: 0 auto;
       padding: 32px 16px 80px;
-    }
-
-    .logo {
-  font-family: 'Passion One', sans-serif;
-  font-size: 36px;
-  text-align: center;
-  margin-bottom: 24px;
-  color: #fff;
-}
-
-    .form-title {
-      text-align: center;
-      color: #00e2c4;
-      font-size: 24px;
-      margin-bottom: 24px;
-      font-family: 'Oswald', sans-serif;
     }
 
     .form-container {
@@ -39,57 +23,75 @@
       align-items: center;
       justify-content: center;
     }
+*/
 
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-      font-size: 14px;
-      color: #fff;
-    }
+ .logo {
+   font-family: 'Passion One', sans-serif;
+   font-size: 36px;
+   text-align: center;
+   margin-bottom: 24px;
+   color: #fff;
+ }
 
-    input[type="file"] {
-      display: none;
-    }
+ .form-title {
+   text-align: center;
+   color: #00e2c4;
+   font-size: 24px;
+   margin-bottom: 24px;
+   font-family: 'Oswald', sans-serif;
+ }
 
-    .file-label {
-      display: inline-block;
-      background: #f2f2f2;
-      color: #6c4ee3;
-      padding: 10px 15px;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 14px;
-      margin-top: 6px;
-      cursor: pointer;
-    }
 
-    .file-name {
-      font-size: 13px;
-      margin-top: 6px;
-      color: #fff;
-    }
+ label {
+   display: block;
+   margin: 12px 0 6px;
+   font-weight: bold;
+   font-size: 14px;
+   color: #fff;
+ }
 
-    button {
-      width: 100%;
-      padding: 12px 0;
-      background: #39354A;
-      color: #fff;
-      border: none;
-      border-radius: 20px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+ input[type="file"] {
+   display: none;
+ }
 
-    button:hover {
-      background: #00e2c4;
-      color: #ffffff;
-    } */
+ .file-label {
+   display: inline-block;
+   background: #f2f2f2;
+   color: #6c4ee3;
+   padding: 10px 15px;
+   border-radius: 12px;
+   font-weight: bold;
+   font-size: 14px;
+   margin-top: 6px;
+   cursor: pointer;
+ }
 
-    /* .tooltip {
+ .file-name {
+   font-size: 13px;
+   margin-top: 6px;
+   color: #fff;
+ }
+
+ button {
+   width: 100%;
+   padding: 12px 0;
+   background: #39354A;
+   color: #fff;
+   border: none;
+   border-radius: 20px;
+   font-size: 1.1rem;
+   font-weight: 700;
+   margin-top: 20px;
+   cursor: pointer;
+   transition: background 0.2s;
+ }
+
+ button:hover {
+   background: #00e2c4;
+   color: #ffffff;
+ }
+
+ .tooltip {
       position: relative;
       display: inline-block;
       margin-left: 5px;
@@ -130,4 +132,4 @@
       border-width: 5px;
       border-style: solid;
       border-color: #333 transparent transparent transparent;
-    } */
+    }

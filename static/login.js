@@ -142,16 +142,15 @@ document.addEventListener('DOMContentLoaded', () =>{
   }
 });
 
+document.getElementById('olho').addEventListener('mousedown', function() {
+  document.getElementById('senha').type = 'text';
+});
 
+document.getElementById('olho').addEventListener('mouseup', function() {
+  document.getElementById('senha').type = 'password';
+});
 
-  function togglePassword() {
-    const senhaInput = document.getElementById("senha");
-    const icon = document.querySelector(".toggle-password");
-    if (senhaInput.type === "password") {
-      senhaInput.type = "text";
-      icon.textContent = "🙈"; // muda ícone quando visível
-    } else {
-      senhaInput.type = "password";
-      icon.textContent = "👁️"; // volta ao ícone de olho
-    }
-  }
+// Para que o password não fique exposto apos mover a imagem.
+document.getElementById('olho').addEventListener('mousemove', function() {
+  document.getElementById('senha').type = 'password';
+});

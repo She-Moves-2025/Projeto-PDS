@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _("Recuperar senha") }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_cliente.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <a href="javascript:history.back()" class="voltar">&lt;</a>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <div class="form-container">
+            <h2 class="form-title">{{ _("Recuperar senha") }}</h2>
+
+        </div>
+        <form action="{{ url_for('esqueceu_senha') }}" method="POST" class="form-box">
+            <div class="input-group">
+                <label for="email">{{ _("E-mail") }}</label>
+                <input type="email" id="email" name="email" placeholder="{{ _('seuemail@aqui') }}" required>
+            </div>
+
+            <button type="submit" class="submit-btn">{{ _("Enviar código") }}</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+</body>
+
+</html>
