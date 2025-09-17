@@ -45,7 +45,11 @@
         <input type="email" id="email" name="email" required>
 
         <label for="senha">{{ _("Senha:") }}</label>
-        <input type="password" id="senha" name="senha" required>
+        <div class="password-wrapper">
+          <img src="https://cdn0.iconfinder.com/data/icons/ui-icons-pack/100/ui-icon-pack-14-512.png" id="olho"
+            class="olho">
+          <input type="password" id="senha" name="senha" required>
+        </div>
 
         <div class="password-checklist" id="password-checklist">
           <span id="check-length" class="check-item">{{ _("• Pelo menos 8 caracteres") }}</span><br>

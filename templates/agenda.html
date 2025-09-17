@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ g.get('babel_locale', 'pt') }}">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -49,36 +50,32 @@
 
   <div class="section-title">{{ _("Agendamentos") }}</div>
   {% for ag in agendamentos %}
-    <div class="event-card" 
-        data-data="{{ ag.data.strftime('%d/%m/%Y') }}"
-        data-atividade="{{ ag.atividade }}"
-        data-status="{{ ag.status }}"
-        data-profissional="{{ ag.profissional_rel.nome if ag.profissional_rel else '' }}"
-        data-cliente="{{ ag.cliente_rel.nome if ag.cliente_rel else '' }}"
-        data-local="{{ ag.local }}"
-        data-horario="{{ ag.horario.strftime('%H:%M') }}">
-        
-      <div class="event-info">
-        <div class="event-type">{{ ag.atividade }}</div>
-        <div class="event-trainer">
-          {% if session['tipo'] == 'profissional' %}
-            {{ ag.cliente_rel.nome if ag.cliente_rel else '' }}
-          {% else %}
-            {{ ag.profissional_rel.nome if ag.profissional_rel else '' }}
-          {% endif %}
-        </div>
-      </div>
+  <div class="event-card" data-data="{{ ag.data.strftime('%d/%m/%Y') }}" data-atividade="{{ ag.atividade }}"
+    data-status="{{ ag.status }}" data-profissional="{{ ag.profissional_rel.nome if ag.profissional_rel else '' }}"
+    data-cliente="{{ ag.cliente_rel.nome if ag.cliente_rel else '' }}" data-local="{{ ag.local }}"
+    data-horario="{{ ag.horario.strftime('%H:%M') }}">
 
-      <div class="event-date">{{ ag.data.strftime('%d/%m/%Y') }}</div>
-
-        {% if session['tipo'] == 'cliente' and ag.status == 'pendente' %}
-          <div class="pay-btn-wrapper">
-            <a href="{{ url_for('tela_pagamento', agendamento_id=ag.id) }}" class="pay-btn">
-              {{ _("Pagar") }}
-            </a>
-          </div>
+    <div class="event-info">
+      <div class="event-type">{{ ag.atividade }}</div>
+      <div class="event-trainer">
+        {% if session['tipo'] == 'profissional' %}
+        {{ ag.cliente_rel.nome if ag.cliente_rel else '' }}
+        {% else %}
+        {{ ag.profissional_rel.nome if ag.profissional_rel else '' }}
         {% endif %}
+      </div>
     </div>
+
+    <div class="event-date">{{ ag.data.strftime('%d/%m/%Y') }}</div>
+
+    {% if session['tipo'] == 'cliente' and ag.status == 'pendente' %}
+    <div class="pay-btn-wrapper">
+      <a href="{{ url_for('tela_pagamento', agendamento_id=ag.id) }}" class="pay-btn">
+        {{ _("Pagar") }}
+      </a>
+    </div>
+    {% endif %}
+  </div>
   {% endfor %}
 
   <div class="recent-section">
@@ -110,16 +107,16 @@
     </div>
   </div>
 
- <nav>
-  <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
-  {% if session['tipo'] == 'profissional' %}
-   <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
-  {% elif session['tipo'] == 'cliente' %}
-   <a href="{{ url_for('buscar') }}"><i class="fas fa-dumbbell"></i></a>
-  {% endif %}
-  <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
-  <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
-</nav>
+  <nav>
+    <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
+    {% if session['tipo'] == 'profissional' %}
+    <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+    {% elif session['tipo'] == 'cliente' %}
+    <a href="{{ url_for('buscar') }}"><i class="fas fa-dumbbell"></i></a>
+    {% endif %}
+    <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
+    <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
+  </nav>
 
 
   <script>
@@ -192,4 +189,5 @@
     window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
   </script>
 </body>
+
 </html>

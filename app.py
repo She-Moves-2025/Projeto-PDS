@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
 from flask_babel import Babel, _
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from flask_socketio import SocketIO, emit, join_room
@@ -17,17 +17,29 @@ import base64
 import os
 import requests
 import random, string
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from sib_api_v3_sdk.models import SendSmtpEmail
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-app.config['MAIL_SERVER'] = "smtp.gmail.com"
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = "shemoves.sistema@gmail.com"
-app.config['MAIL_PASSWORD'] = "nyla upss ebcv semv"
-   
-mail = Mail(app)
+# app.config['MAIL_SERVER'] = "smtp.gmail.com"
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = "shemoves.sistema@gmail.com"
+# app.config['MAIL_PASSWORD'] = "nyla upss ebcv semv"
+# mail = Mail(app)
+
+configuration = sib_api_v3_sdk.Configuration()
+configuration.api_key['api-key'] = os.getenv("SENDINBLUE_API_KEY")
+
+api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+    sib_api_v3_sdk.ApiClient(configuration)
+)
 
 socketio = SocketIO(app, async_mode='eventlet')
 
@@ -89,7 +101,7 @@ def cadastro_cliente():
         # Valida CPF
         if not validar_cpf(cpf):
             flash(_('CPF inválido.'), 'error')
-            return render_template('cadastro-profissional.html')
+            return render_template('cadastro-cliente.html')
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
@@ -126,11 +138,22 @@ def cadastro_cliente():
         db.session.commit()
 
         # Enviar e-mail
-        msg = Message("Verificação de E-mail - SheMoves",
-                    sender=app.config['MAIL_USERNAME'],
-                    recipients=[login.email])
-        msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
-        mail.send(msg)
+        # msg = Message("Verificação de E-mail - SheMoves",
+        #             sender=app.config['MAIL_USERNAME'],
+        #             recipients=[login.email])
+        # msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
+        # mail.send(msg)
+
+        send_smtp_email = SendSmtpEmail(
+            to=[{"email": login.email}],
+            sender={"name": "SheMoves", "email": "shemoves.sistema@gmail.com"},
+            subject="Verificação de E-mail - SheMoves",
+            html_content=f"<p>Seu código de verificação é: <b>{codigo}</b><br>Ele expira em 5 minutos.</p>"
+        )
+        try:
+            api_instance.send_transac_email(send_smtp_email)
+        except ApiException as e:
+            print("Erro ao enviar e-mail:", e)
 
         flash(_('Código de verificação enviado para seu e-mail.'), 'info')
 
@@ -197,11 +220,23 @@ def cadastro_profissional():
         db.session.commit()
 
         # Enviar e-mail
-        msg = Message("Verificação de E-mail - SheMoves",
-                    sender=app.config['MAIL_USERNAME'],
-                    recipients=[login.email])
-        msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
-        mail.send(msg)
+        # msg = Message("Verificação de E-mail - SheMoves",
+        #             sender=app.config['MAIL_USERNAME'],
+        #             recipients=[login.email])
+        # msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
+        # mail.send(msg)
+
+        send_smtp_email = SendSmtpEmail(
+            to=[{"email": login.email}],
+            sender={"name": "SheMoves", "email": "shemoves.sistema@gmail.com"},
+            subject="Verificação de E-mail - SheMoves",
+            html_content=f"<p>Seu código de verificação é: <b>{codigo}</b><br>Ele expira em 5 minutos.</p>"
+        )
+        try:
+            api_instance.send_transac_email(send_smtp_email)
+        except ApiException as e:
+            print("Erro ao enviar e-mail:", e)
+
 
         flash(_('Código de verificação enviado para seu e-mail.'), 'info')
 
@@ -322,8 +357,9 @@ def login():
             flash(_("Confirme seu e-mail antes de continuar."), "warning")
             return redirect(url_for("verificar_email", email=login_user.email))
 
-    perfil = Perfil.query.get(login_user.id_perfil)
-    session['id_perfil'] = perfil.id 
+        perfil = Perfil.query.get(login_user.id_perfil)
+        session['id_perfil'] = perfil.id 
+
 
         if perfil.id_cliente:
             cliente = Cliente.query.get(perfil.id_cliente)
@@ -528,9 +564,21 @@ def esqueceu_senha():
         login.expira_em = datetime.utcnow() + timedelta(minutes=5)
         db.session.commit()
 
-        msg = Message(_("Recuperação de senha"), sender=app.config['MAIL_USERNAME'], recipients=[email])
-        msg.body = _(f"Seu código de recuperação é: {codigo}. Ele expira em 5 minutos.")
-        mail.send(msg)
+        # msg = Message(_("Recuperação de senha"), sender=app.config['MAIL_USERNAME'], recipients=[email])
+        # msg.body = _(f"Seu código de recuperação é: {codigo}. Ele expira em 5 minutos.")
+        # mail.send(msg)
+
+        send_smtp_email = SendSmtpEmail(
+            to=[{"email": email}],
+            sender={"name": "SheMoves", "email": "shemoves.sistema@gmail.com"},
+            subject="Recuperação de Senha",
+            html_content=f"<p>Seu código de recuperação é: <b>{codigo}</b><br>Ele expira em 5 minutos.</p>"
+        )
+        try:
+            api_instance.send_transac_email(send_smtp_email)
+        except ApiException as e:
+            print("Erro ao enviar e-mail:", e)
+
 
         flash(_('Enviamos um código de recuperação para seu e-mail.'), 'sucess')
         return redirect(url_for('confirmar_codigo', email=email))

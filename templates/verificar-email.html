@@ -4,22 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verificação de E-mail</title>
+  <title>{{ _("Verificação de E-mail") }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_cliente.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <h2>Digite o código enviado para {{ email }}</h2>
-  <form method="POST">
-    <input type="text" name="codigo" maxlength="6" required>
-    <button type="submit">Confirmar</button>
-  </form>
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
+  <div class="container">
+    <a href="javascript:history.back()" class="voltar">&lt;</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% for category, msg in messages %}
-      <p style="color:red;">{{ msg }}</p>
+    <p style="color:red;">{{ msg }}</p>
     {% endfor %}
-  {% endwith %}
+    {% endwith %}
+    <h2 class="form-title">{{ _("Digite o código enviado para") }} {{ email }}</h2>
+    <div class="form-container">
+      <form method="POST">
+        <div class="input-group">
+          <input type="text" id="codigo" name="codigo" maxlength="6" required>
+        </div>
+        <button type="submit" class="submit-btn">{{ _("Confirmar") }}</button>
+      </form>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='login.js') }}"></script>
 </body>
+
 </html>

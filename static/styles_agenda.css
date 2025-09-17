@@ -1,21 +1,30 @@
-* {
+/* *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-} */
+} 
 
 body {
     background-color: #1e1e1e;
     font-family: 'Oswald', sans-serif;
     color: #fff;
     padding-bottom: 80px;
-}
+} */
 
 header {
     padding: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.voltar {
+  color: #48e0c7;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 18px;
+  align-self: flex-start;
+  font-weight: 600;
 }
 
 .greeting {
