@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ _("Cadastrar Agendamento") }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='agendamento.css') }}">
+</head>
+<body>
+  <div class="agendamento-container">
+    <h2>{{ _("Cadastrar Agendamento") }}</h2>
+
+    <form method="POST" action="{{ url_for('cadastrar_agendamento', id_perfil_cliente=id_perfil_cliente, id_perfil_profissional=id_perfil_profissional) }}">
+      <div class="form-group">
+        <label for="data">{{ _("Data") }}</label>
+        <input type="date" id="data" name="data" required>
+      </div>
+
+      <div class="form-group">
+        <label for="horario">{{ _("Horário") }}</label>
+        <input type="time" id="horario" name="horario" required>
+      </div>
+
+      <div class="form-group">
+        <label for="local">{{ _("Local") }}</label>
+        <input type="text" id="local" name="local" placeholder="Ex: Academia X" required>
+      </div>
+
+      <div class="form-group">
+        <label for="valor">{{ _("Valor (R$)") }}</label>
+        <input type="number" id="valor" name="valor" step="0.01" placeholder="0,00" required>
+      </div>
+
+      <div class="form-group">
+        <label for="atividade">Atividade</label>
+            <select name="atividade" id="atividade" required>
+            <option value="">Selecione</option>
+            <option value="Pilates">Pilates</option>
+            <option value="Musculação">Musculação</option>
+            <option value="Yoga">Yoga</option>
+            <option value="Fit Dance">Fit Dance</option>
+            <option value="Boxe">Boxe</option>
+            <option value="Alongamento">Alongamento</option>
+            <option value="Crossfit">Crossfit</option>
+            <option value="Dança">Dança</option>
+            <option value="Treinamento Funcional">Treinamento Funcional</option>
+            <option value="Natação">Natação</option>
+            </select>
+      </div>
+
+      <button type="submit" class="btn-submit">{{ _("Salvar Agendamento") }}</button>
+      <a href="{{ url_for('chat', id_destino=id_perfil_cliente) }}" class="btn-cancelar">{{ _("Cancelar") }}</a>
+    </form>
+  </div>
+</body>
+</html>

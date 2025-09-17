@@ -93,12 +93,16 @@ class Avaliacao(db.Model):
 class Agendamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(15))
+    atividade = db.Column(db.String(50), nullable=False)
     id_cliente = db.Column(db.Integer, db.ForeignKey('cliente.id'))
     id_profissional = db.Column(db.Integer, db.ForeignKey('profissional.id'))
     data = db.Column(db.Date)
     horario = db.Column(db.Time)
     local = db.Column(db.String(300))
     valor = db.Column(db.Numeric(10, 2))
+
+    profissional_rel = db.relationship("Profissional", backref="agendamentos")
+    cliente_rel = db.relationship("Cliente", backref="agendamentos")
 
 class Pagamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -110,8 +114,11 @@ class Pagamento(db.Model):
 
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    remetente_id = db.Column(db.Integer)
-    destinatario_id = db.Column(db.Integer)
+    remetente_id = db.Column(db.Integer, db.ForeignKey('perfil.id'), nullable=False)
+    destinatario_id = db.Column(db.Integer, db.ForeignKey('perfil.id'), nullable=False)
     mensagem = db.Column(db.Text)
     lida = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    remetente = db.relationship("Perfil", foreign_keys=[remetente_id])
+    destinatario = db.relationship("Perfil", foreign_keys=[destinatario_id])

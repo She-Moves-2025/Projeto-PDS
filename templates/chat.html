@@ -8,27 +8,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 </head>
-<body>
+<body data-id-perfil="{{ session['id_perfil'] }}">
   <div class="chat-container">
     <div class="chat-header">
       <a href="/lista-chat" class="back-button">‹</a>
-      <img src="{{ url_for('static', filename='imagens/avatar-default.png') }}" class="profile-pic">
-      <span class="chat-name">{{ outra_pessoa.nome }}</span>
+      <img src="{{ url_for('static', filename=outra_pessoa.imagem_perfil.split('static/')[-1] if outra_pessoa.imagem_perfil else 'imagens/avatar-default.png') }}" class="profile-pic">
+      <span class="chat-name">{{ outra_pessoa.cliente.nome if outra_pessoa.cliente else outra_pessoa.profissional.nome }}</span>
+
+      {% if session['tipo'] == 'profissional' %}
+      <a href="{{ url_for('cadastrar_agendamento', id_perfil_cliente=outra_pessoa.id, id_perfil_profissional=session['id_perfil']) }}" class="btn-agendamento">
+        Agendamento
+      </a>
+      {% endif %}
     </div>
 
     <div id="chat-box" class="chat-box">
       {% for m in historico %}
-        {% if m.mensagem.startswith('data:audio') %}
-          <div class="message {{ 'sent' if m.remetente_id == session['id'] else 'received' }}">
+        <div class="message {{ 'sent' if m.remetente_id == session['id_perfil'] else 'received' }}">
+          {% if m.mensagem.startswith('data:audio') %}
             <audio controls src="{{ m.mensagem }}"></audio>
-            <span class="time">{{ m.timestamp.strftime('%H:%M') }}</span>
-          </div>
-        {% else %}
-          <div class="message {{ 'sent' if m.remetente_id == session['id'] else 'received' }}">
+          {% else %}
             {{ m.mensagem }}
-            <span class="time">{{ m.timestamp.strftime('%H:%M') }}</span>
-          </div>
-        {% endif %}
+          {% endif %}
+          <span class="time">{{ m.timestamp.strftime('%H:%M') }}</span>
+        </div>
       {% endfor %}
     </div>
 
@@ -43,6 +46,7 @@
   <script>
     const socket = io();
     const sala = "{{ sala }}";
+    const meuPerfilId = parseInt(document.body.dataset.idPerfil);
 
     socket.on('connect', () => {
       socket.emit('entrar', { sala: sala });
@@ -52,12 +56,12 @@
       const box = document.getElementById("chat-box");
       let el = document.createElement("div");
       el.classList.add("message");
-      el.classList.add(data.remetente === "{{ session['tipo'] }}" ? "sent" : "received");
+      el.classList.add(data.remetente_id === meuPerfilId ? "sent" : "received");
 
       if (data.tipo === 'texto') {
-        el.innerHTML = `${data.msg}<span class="time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+        el.innerHTML = `${data.msg}<span class="time">${new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}</span>`;
       } else {
-        el.innerHTML = `<audio controls src="${data.audio}"></audio><span class="time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+        el.innerHTML = `<audio controls src="${data.audio}"></audio><span class="time">${new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}</span>`;
       }
 
       box.appendChild(el);
@@ -73,16 +77,14 @@
     }
 
     function enviarAudio(input) {
-    const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = function (e) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
         const base64 = e.target.result;
         socket.emit('mensagem', { audio: base64, sala: sala, tipo: 'audio' });
-    };
-    if (file) reader.readAsDataURL(file);
+      };
+      if (file) reader.readAsDataURL(file);
     }
-
-
   </script>
 </body>
 </html>

@@ -1,0 +1,95 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #2f2d30;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.agendamento-container {
+  background: #3a383c;
+  padding: 25px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.agendamento-container h2 {
+  color: #A887FF;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.agendamento-form .form-group {
+  margin-bottom: 15px;
+}
+
+.agendamento-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #ddd;
+}
+
+.agendamento-form input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #2f2d30;
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.agendamento-form input::placeholder {
+  color: #aaa;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: #48e0c7;
+  color: #2f2d30;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-submit:hover {
+  background: #35bda8;
+}
+
+.btn-cancelar {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  color: #bbb;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn-cancelar:hover {
+  color: #fff;
+}
+
+/* Responsividade */
+@media (max-width: 500px) {
+  .agendamento-container {
+    padding: 20px;
+    border-radius: 12px;
+  }
+  .agendamento-form input {
+    font-size: 0.95rem;
+  }
+}

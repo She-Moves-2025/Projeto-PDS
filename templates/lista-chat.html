@@ -3,36 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='chat_list.css') }}">
-  <title>{{ _("Conversas Recentes") }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700&family=Oswald:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Conversas Recentes</title>
 </head>
-<body data-id="{{ session['id'] }}" data-tipo="{{ session['tipo'] }}">
-  <h2>{{ _("Conversas Recentes") }}</h2>
+<body data-id-perfil="{{ session['id_perfil'] }}">
+  <h2>Conversas Recentes</h2>
   <ul>
     {% for p in pessoas %}
-      <li>
+      <li class="chat-item">
         <a href="{{ url_for('chat', id_destino=p.id) }}">
-          {{ p.nome }}
+          <img src="{{ url_for('static', filename=(p.imagem_perfil.split('static/')[-1] if p.imagem_perfil else 'imagens/avatar-default.png')) }}" class="profile-pic">
+          <span class="chat-name">{{ p.cliente.nome if p.cliente else p.profissional.nome }}</span>
         </a>
       </li>
     {% endfor %}
   </ul>
+  
+  <nav>
+    <a href="{{ url_for('agenda') }}"><i class="fas fa-calendar-alt"></i></a>
+    {% if session['tipo'] == 'profissional' %}
+    <a href="{{ url_for('modalidade_local') }}"><i class="fas fa-dumbbell"></i></a>
+    {% elif session['tipo'] == 'cliente' %}
+    <a href="{{ url_for('buscar') }}"><i class="fas fa-dumbbell"></i></a>
+    {% endif %}
+    <a href="{{ url_for('listachat') }}"><i class="fas fa-comment"></i></a>
+    <a href="{{ url_for('notificacoes') }}"><i class="fas fa-bell"></i></a>
+  </nav>
 
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script>
     const socket = io();
-
-    const meuId = parseInt(document.body.dataset.id);
-    const meuTipo = document.body.dataset.tipo;
+    const meuPerfilId = parseInt(document.body.dataset.idPerfil);
 
     socket.on('nova_mensagem', (data) => {
-      const idEsperado = data.destinatario_id;
-
-      if (idEsperado === meuId) {
-        alert('Você recebeu uma nova mensagem!');
-        location.reload();
+      if (data.destinatario_id === meuPerfilId) {
+        location.reload(); // atualiza lista de chats
       }
     });
+
   </script>
 </body>
 </html>

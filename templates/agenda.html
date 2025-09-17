@@ -48,14 +48,37 @@
   </section>
 
   <div class="section-title">{{ _("Agendamentos") }}</div>
-  {% for agendamento in agendamentos %}
-  <div class="event-card">
-    <div class="event-info">
-      <div class="event-type">{{ agendamento.tipo }}</div>
-      <div class="event-trainer">{{ agendamento.profissional }}<br>{{ agendamento.data }} - {{ agendamento.hora }}</div>
+  {% for ag in agendamentos %}
+    <div class="event-card" 
+        data-data="{{ ag.data.strftime('%d/%m/%Y') }}"
+        data-atividade="{{ ag.atividade }}"
+        data-status="{{ ag.status }}"
+        data-profissional="{{ ag.profissional_rel.nome if ag.profissional_rel else '' }}"
+        data-cliente="{{ ag.cliente_rel.nome if ag.cliente_rel else '' }}"
+        data-local="{{ ag.local }}"
+        data-horario="{{ ag.horario.strftime('%H:%M') }}">
+        
+      <div class="event-info">
+        <div class="event-type">{{ ag.atividade }}</div>
+        <div class="event-trainer">
+          {% if session['tipo'] == 'profissional' %}
+            {{ ag.cliente_rel.nome if ag.cliente_rel else '' }}
+          {% else %}
+            {{ ag.profissional_rel.nome if ag.profissional_rel else '' }}
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="event-date">{{ ag.data.strftime('%d/%m/%Y') }}</div>
+
+        {% if session['tipo'] == 'cliente' and ag.status == 'pendente' %}
+          <div class="pay-btn-wrapper">
+            <a href="{{ url_for('tela_pagamento', agendamento_id=ag.id) }}" class="pay-btn">
+              {{ _("Pagar") }}
+            </a>
+          </div>
+        {% endif %}
     </div>
-    <div class="event-duration">{{ agendamento.duracao }} Mins</div>
-  </div>
   {% endfor %}
 
   <div class="recent-section">
@@ -70,6 +93,20 @@
         </div>
       </div>
       {% endfor %}
+    </div>
+  </div>
+
+  <!-- 🔹 Modal estilizado -->
+  <div id="eventModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modalAtividade"></h2>
+      <p><strong>Profissional:</strong> <span id="modalProfissional"></span></p>
+      <p><strong>Cliente:</strong> <span id="modalCliente"></span></p>
+      <p><strong>Data:</strong> <span id="modalData"></span></p>
+      <p><strong>Horário:</strong> <span id="modalHorario"></span></p>
+      <p><strong>Local:</strong> <span id="modalLocal"></span></p>
+      <p><strong>Status:</strong> <span id="modalStatus"></span></p>
     </div>
   </div>
 
@@ -105,14 +142,12 @@
 
       monthYear.textContent = `${date.toLocaleDateString('pt-BR', { month: 'long' }).toUpperCase()} ${year}`;
 
-      // Preencher dias vazios antes do 1
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement("div");
         empty.classList.add("day");
         calendarGrid.appendChild(empty);
       }
 
-      // Dias do mês
       for (let d = 1; d <= daysInMonth; d++) {
         const day = document.createElement("div");
         day.classList.add("day");
@@ -120,11 +155,7 @@
         day.textContent = d;
 
         const today = new Date();
-        if (
-          d === today.getDate() &&
-          month === today.getMonth() &&
-          year === today.getFullYear()
-        ) {
+        if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
           day.classList.add("today");
         }
 
@@ -138,7 +169,27 @@
     }
 
     renderCalendar(currentDate);
+
+    // 🔹 Modal script
+    const modal = document.getElementById("eventModal");
+    const closeBtn = document.querySelector(".modal .close");
+
+    document.querySelectorAll(".event-card").forEach(card => {
+      card.addEventListener("click", () => {
+        document.getElementById("modalAtividade").textContent = card.dataset.atividade;
+        document.getElementById("modalProfissional").textContent = card.dataset.profissional;
+        document.getElementById("modalCliente").textContent = card.dataset.cliente;
+        document.getElementById("modalData").textContent = card.dataset.data;
+        document.getElementById("modalHorario").textContent = card.dataset.horario;
+        document.getElementById("modalLocal").textContent = card.dataset.local;
+        document.getElementById("modalStatus").textContent = card.dataset.status;
+
+        modal.style.display = "flex";
+      });
+    });
+
+    closeBtn.onclick = () => { modal.style.display = "none"; };
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
   </script>
 </body>
-
 </html>

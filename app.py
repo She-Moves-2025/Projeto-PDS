@@ -9,6 +9,8 @@ from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
 from flask_babel import Babel, _
 from flask_mail import Mail, Message
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from flask_socketio import SocketIO, emit, join_room
 import eventlet
 import base64
@@ -56,9 +58,6 @@ def change_lang(lang):
 def calcular_idade(data_nascimento):
     hoje = date.today()
     return hoje.year - data_nascimento.year - ((hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day))
-
-
-
 
 # ========== ROTA: Home =============
 @app.route('/')
@@ -323,6 +322,7 @@ def login():
         return redirect(url_for("verificar_email", email=login_user.email))
 
     perfil = Perfil.query.get(login_user.id_perfil)
+    session['id_perfil'] = perfil.id 
 
     if perfil.id_cliente:
         cliente = Cliente.query.get(perfil.id_cliente)
@@ -354,8 +354,21 @@ def login():
 def agenda():
     if 'id' not in session:
         return redirect('/')
+    
+    tipo = session.get('tipo')
+    id_perfil = session.get('id')
 
-    return render_template('agenda.html', user_name=session.get('user_name'))
+    if tipo == 'profissional':
+        agendamentos = Agendamento.query.filter_by(id_profissional=id_perfil).all()
+    else:
+        agendamentos = Agendamento.query.filter_by(id_cliente=id_perfil).all()
+
+    return render_template(
+        'agenda.html',
+        user_name=session.get('user_name'),
+        agendamentos=agendamentos
+    )
+
 
 # ========== ROTA: Painel MASTER ===========
 @app.route('/painel-master')
@@ -613,57 +626,44 @@ def resultados_busca():
 # ========== Lista Chat===========
 @app.route('/lista-chat')
 def listachat():
-    if 'id' not in session or 'tipo' not in session:
+    if 'id_perfil' not in session:
         return redirect('/')
 
-    id_usuario = session['id']
-    tipo = session['tipo']
+    id_perfil = session['id_perfil']
 
-    if tipo == 'cliente':
-        chats = Chat.query.filter(
-            (Chat.remetente_id == id_usuario) | (Chat.destinatario_id == id_usuario)
-        ).all()
-        ids = set()
-        for c in chats:
-            if c.remetente_id != id_usuario:
-                ids.add(c.remetente_id)
-            elif c.destinatario_id != id_usuario:
-                ids.add(c.destinatario_id)
-        profissionais = Profissional.query.filter(Profissional.id.in_(ids)).all()
-        return render_template('lista-chat.html', pessoas=profissionais, tipo='cliente')
+    # Pega todos os chats onde o perfil aparece
+    chats = Chat.query.filter(
+        (Chat.remetente_id == id_perfil) | (Chat.destinatario_id == id_perfil)
+    ).all()
 
-    elif tipo == 'profissional':
-        chats = Chat.query.filter(
-            (Chat.remetente_id == id_usuario) | (Chat.destinatario_id == id_usuario)
-        ).all()
-        ids = set()
-        for c in chats:
-            if c.remetente_id != id_usuario:
-                ids.add(c.remetente_id)
-            elif c.destinatario_id != id_usuario:
-                ids.add(c.destinatario_id)
-        clientes = Cliente.query.filter(Cliente.id.in_(ids)).all()
-        return render_template('lista-chat.html', pessoas=clientes, tipo='profissional')
+    ids = set()
+    for c in chats:
+        if c.remetente_id != id_perfil:
+            ids.add(c.remetente_id)
+        elif c.destinatario_id != id_perfil:
+            ids.add(c.destinatario_id)
+
+    # Carregar perfis das pessoas que conversaram
+    pessoas = Perfil.query.filter(Perfil.id.in_(ids)).all()
+
+    return render_template('lista-chat.html', pessoas=pessoas)
 
 
 @app.route('/chat/<int:id_destino>')
 def chat(id_destino):
-    if 'id' not in session or 'tipo' not in session:
+    if 'id_perfil' not in session:
         return redirect('/')
 
-    id_usuario = session['id']
-    tipo = session['tipo']
+    id_perfil = session['id_perfil']
 
-    if tipo == 'cliente':
-        sala = f"cliente_{id_usuario}_prof_{id_destino}"
-        outra_pessoa = Profissional.query.get(id_destino)
-    else:
-        sala = f"cliente_{id_destino}_prof_{id_usuario}"
-        outra_pessoa = Cliente.query.get(id_destino)
+    # Monta uma "sala" única entre dois perfis
+    sala = f"perfil_{min(id_perfil, id_destino)}_{max(id_perfil, id_destino)}"
+
+    outra_pessoa = Perfil.query.get(id_destino)
 
     historico = Chat.query.filter(
-        ((Chat.remetente_id == id_usuario) & (Chat.destinatario_id == id_destino)) |
-        ((Chat.remetente_id == id_destino) & (Chat.destinatario_id == id_usuario))
+        ((Chat.remetente_id == id_perfil) & (Chat.destinatario_id == id_destino)) |
+        ((Chat.remetente_id == id_destino) & (Chat.destinatario_id == id_perfil))
     ).order_by(Chat.timestamp).all()
 
     return render_template(
@@ -673,23 +673,22 @@ def chat(id_destino):
         historico=historico
     )
 
+
 @socketio.on('entrar')
 def entrar(data):
     join_room(data['sala'])
 
+
 @socketio.on('mensagem')
 def handle_mensagem(data):
-    remetente_id = session.get('id')
-    tipo_remetente = session.get('tipo')
+    remetente_id = session.get('id_perfil')
     sala = data['sala']
     tipo_msg = data['tipo']
 
-    # Determinar o ID do destinatário
-    partes = sala.replace("cliente_", "").replace("prof_", "").split("_")
-    if tipo_remetente == 'cliente':
-        destinatario_id = int(partes[1])
-    else:
-        destinatario_id = int(partes[0])
+    # Determinar o ID do destinatário pela sala
+    partes = sala.replace("perfil_", "").split("_")
+    ids = list(map(int, partes))
+    destinatario_id = ids[0] if ids[1] == remetente_id else ids[1]
 
     if tipo_msg == 'texto':
         msg = data.get('msg')
@@ -701,14 +700,12 @@ def handle_mensagem(data):
         db.session.add(nova_msg)
         db.session.commit()
 
-        # envia a mensagem para quem estiver na sala
         emit('mensagem', {
             'msg': msg,
-            'remetente': tipo_remetente,
+            'remetente_id': remetente_id,
             'tipo': 'texto'
         }, to=sala)
 
-        # envia notificação de nova mensagem globalmente
         emit('nova_mensagem', {
             'remetente_id': remetente_id,
             'destinatario_id': destinatario_id,
@@ -727,7 +724,7 @@ def handle_mensagem(data):
 
         emit('mensagem', {
             'audio': base64_audio,
-            'remetente': tipo_remetente,
+            'remetente_id': remetente_id,
             'tipo': 'audio'
         }, to=sala)
 
@@ -737,13 +734,76 @@ def handle_mensagem(data):
             'msg': '[áudio]'
         }, broadcast=True)
 
+# ========== Cadastrar agendamento ===========
+@app.route('/cadastrar-agendamento/<int:id_perfil_cliente>/<int:id_perfil_profissional>', methods=['GET', 'POST'])
+def cadastrar_agendamento(id_perfil_cliente, id_perfil_profissional):
+    if 'id' not in session or session.get('tipo') != 'profissional':
+        return redirect('/')
+
+    # Buscar o perfil da cliente
+    perfil_cliente = Perfil.query.get(id_perfil_cliente)
+    if not perfil_cliente or not perfil_cliente.id_cliente:
+        flash("Perfil de cliente não encontrado.", "danger")
+        return redirect('/')
+
+    # Buscar o perfil da profissional
+    perfil_profissional = Perfil.query.get(id_perfil_profissional)
+    if not perfil_profissional or not perfil_profissional.id_profissional:
+        flash("Perfil de profissional não encontrado.", "danger")
+        return redirect('/')
+
+    # Extrair os IDs reais
+    id_cliente = perfil_cliente.id_cliente
+    id_profissional = perfil_profissional.id_profissional
+
+    if request.method == 'POST':
+        data = request.form['data']
+        horario = request.form['horario']
+        local = request.form['local']
+        valor = request.form['valor']
+        atividade = request.form['atividade']
+
+        agendamento = Agendamento(
+            status='pendente',
+            id_cliente=id_cliente,
+            id_profissional=id_profissional,
+            data=datetime.strptime(data, '%Y-%m-%d').date(),
+            horario=datetime.strptime(horario, '%H:%M').time(),
+            local=local,
+            valor=valor,
+            atividade=atividade
+        )
+        db.session.add(agendamento)
+        db.session.commit()
+        flash('Agendamento criado com sucesso!', 'success')
+
+        # Redireciona para o chat com o perfil da cliente
+        return redirect(url_for('chat', id_destino=id_perfil_cliente))
+
+    return render_template(
+        'cadastrar-agendamento.html',
+        id_perfil_cliente=id_perfil_cliente,
+        id_perfil_profissional=id_perfil_profissional
+    )
+
+# ========== Pagamento ===========
+@app.route('/pagamento/<int:agendamento_id>')
+def tela_pagamento(agendamento_id):
+    # Aqui você pode buscar os dados do agendamento no banco
+    agendamento = Agendamento.query.get_or_404(agendamento_id)
+
+    return render_template(
+        'tela-pagamento.html',
+        agendamento=agendamento
+    )
+
 
 # ========== Notificações ===========
 @app.route('/notifiçações')
 def notificacoes():
     return render_template('notificações.html')
 
-# ========== Notificações ===========
+# ========== Validações ===========
 def validar_cpf(cpf: str) -> bool:
     cpf = ''.join(filter(str.isdigit, cpf))
 

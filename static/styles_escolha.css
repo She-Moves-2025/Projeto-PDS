@@ -1,11 +1,11 @@
-/* body {
+ body {
   background: #2D2A32;
   font-family: 'Montserrat', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-} */
+} 
  
-/* 
+ 
 .container {
   max-width: 360px;
   margin: 0 auto;
@@ -15,16 +15,16 @@
   align-items: center;
 } */
 
-/* .voltar {
+ .voltar {
   color: #48e0c7;
   text-decoration: none;
   font-size: 1rem;
   margin-bottom: 18px;
   align-self: flex-start;
   font-weight: 600;
-} */
+} 
 
-/* .titulo-box {
+.titulo-box {
   width: 100%;
   background: #A887FF;
   border-radius: 16px;
@@ -97,4 +97,4 @@
   object-fit: contain;
   display: block;
 }
- */
+
