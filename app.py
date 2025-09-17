@@ -322,8 +322,9 @@ def login():
             flash(_("Confirme seu e-mail antes de continuar."), "warning")
             return redirect(url_for("verificar_email", email=login_user.email))
 
-    perfil = Perfil.query.get(login_user.id_perfil)
-    session['id_perfil'] = perfil.id 
+        perfil = Perfil.query.get(login_user.id_perfil)
+        session['id_perfil'] = perfil.id 
+
 
         if perfil.id_cliente:
             cliente = Cliente.query.get(perfil.id_cliente)
