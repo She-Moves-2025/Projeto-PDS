@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,11 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles_cliente.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Passion+One:wght@400;700;900&family=Racing+Sans+One&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
   <div class="container">
     <a href="javascript:history.back()" class="voltar">&lt;</a>
@@ -17,14 +21,14 @@
       <span style="color: rgb(0, 192, 188);">She</span>Moves
     </h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="flash-messages">
-            {% for category, message in messages %}
-              <div class="flash {{ error }}">{{ message }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash {{ error }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
     <div class="form-container">
       <h2 class="form-title">{{ _("PROFISSIONAL") }}</h2>
       <form action="/cadastro-profissional" id="login-form" method="POST">
@@ -44,12 +48,16 @@
         <input type="email" id="email" name="email" required>
 
         <label for="senha">{{ _("Senha:") }}</label>
-        <input type="password" id="senha" name="senha" required>
+        <div class="password-wrapper">
+          <img src="https://cdn0.iconfinder.com/data/icons/ui-icons-pack/100/ui-icon-pack-14-512.png" id="olho"
+            class="olho">
+          <input type="password" id="senha" name="senha" required>
+        </div>
         <div class="password-checklist" id="password-checklist">
-        <span id="check-length" class="check-item">{{ _("• Pelo menos 8 caracteres") }}</span><br>
-        <span id="check-number" class="check-item">{{ _("• Pelo menos 1 número") }}</span><br>
-        <span id="check-special" class="check-item">{{ _("• Pelo menos 1 caractere especial") }}</span>
-      </div>
+          <span id="check-length" class="check-item">{{ _("• Pelo menos 8 caracteres") }}</span><br>
+          <span id="check-number" class="check-item">{{ _("• Pelo menos 1 número") }}</span><br>
+          <span id="check-special" class="check-item">{{ _("• Pelo menos 1 caractere especial") }}</span>
+        </div>
 
         <button type="submit" class="submit-btn">{{ _("Cadastrar") }}</button>
       </form>
@@ -58,4 +66,5 @@
   <script src="{{ url_for('static', filename='login.js') }}"></script>
 
 </body>
+
 </html>

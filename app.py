@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify, current_app 
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from models import db, Profissional, Perfil, Login, Regiao, Modalidade, Cliente, RecuperarSenha, Notificacao, Avaliacao, Agendamento, Pagamento, Chat
+from models import db, Profissional, Perfil, Login, Regiao, Modalidade, Cliente, RecuperarSenha, Notificacao, Avaliacao, Agendamento, Pagamento, Chat, VerificacaoEmail
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import func, or_, and_
@@ -298,57 +298,59 @@ def aguardando_aprovacao():
     return render_template('aguardando.html')
 
 # ========== ROTA: Login ===========
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    email = request.form['email']
-    senha = request.form['senha']
+    if request.method == 'POST':
+        email = request.form['email']
+        senha = request.form['senha']
 
-    if email == 'admin@master' and senha == '010203':
-        session['master'] = True
-        return redirect('/painel-master')
+        if email == 'admin@master' and senha == '010203':
+            session['master'] = True
+            return redirect('/painel-master')
 
-    login_user = Login.query.filter_by(email=email).first()
+        login_user = Login.query.filter_by(email=email).first()
 
-    if not login_user:
-        flash(_('Usuária não encontrada.'))
-        return redirect('/')
-    
-    if not check_password_hash(login_user.senha, senha):
-        flash(_('Senha incorreta.'))
-        return redirect('/')
-    
-    if not getattr(login_user, "email_verificado", False):
-        flash(_("Confirme seu e-mail antes de continuar."), "warning")
-        return redirect(url_for("verificar_email", email=login_user.email))
+        if not login_user:
+            flash(_('Usuária não encontrada.'))
+            return redirect('/')
+        
+        if not check_password_hash(login_user.senha, senha):
+            flash(_('Senha incorreta.'))
+            return redirect('/')
+        
+        if not getattr(login_user, "email_verificado", False):
+            flash(_("Confirme seu e-mail antes de continuar."), "warning")
+            return redirect(url_for("verificar_email", email=login_user.email))
 
     perfil = Perfil.query.get(login_user.id_perfil)
     session['id_perfil'] = perfil.id 
 
-    if perfil.id_cliente:
-        cliente = Cliente.query.get(perfil.id_cliente)
-        if not cliente.validado:
-            return redirect('/aguardando-aprovacao')
+        if perfil.id_cliente:
+            cliente = Cliente.query.get(perfil.id_cliente)
+            if not cliente.validado:
+                return redirect('/aguardando-aprovacao')
 
-        session['id'] = cliente.id
-        session['tipo'] = 'cliente'
-        session['user_name'] = cliente.nome
-        return redirect('/agenda')
+            session['id'] = cliente.id
+            session['tipo'] = 'cliente'
+            session['user_name'] = cliente.nome
+            return redirect('/agenda')
 
-    elif perfil.id_profissional:
-          profissional = Profissional.query.get(perfil.id_profissional)
-          if not profissional.validado:
-              return redirect('/aguardando-aprovacao')
+        elif perfil.id_profissional:
+            profissional = Profissional.query.get(perfil.id_profissional)
+            if not profissional.validado:
+                return redirect('/aguardando-aprovacao')
 
-          session['id'] = profissional.id
-          session['tipo'] = 'profissional'
-          session['user_name'] = profissional.nome
+            session['id'] = profissional.id
+            session['tipo'] = 'profissional'
+            session['user_name'] = profissional.nome
 
-          tem_regioes = Regiao.query.filter_by(id_profissional=profissional.id).first()
-          tem_modalidades = Modalidade.query.filter_by(id_profissional=profissional.id).first()
-          if not tem_regioes or not tem_modalidades:
-              return redirect('/modalidade-local')
-          return redirect('/agenda')
+            tem_regioes = Regiao.query.filter_by(id_profissional=profissional.id).first()
+            tem_modalidades = Modalidade.query.filter_by(id_profissional=profissional.id).first()
+            if not tem_regioes or not tem_modalidades:
+                return redirect('/modalidade-local')
+            return redirect('/agenda')
 
+    return render_template('login.html')  # GET mostra a tela
 # ========== ROTA: Painel após login ===========
 @app.route('/agenda')
 def agenda():
@@ -515,10 +517,73 @@ def modalidade_local():
 def esqueceu_senha():
     if request.method == 'POST':
         email = request.form['email']
-        
-        flash(_('Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.'))
-        return redirect('/esqueceu-senha')
+        login = Login.query.filter_by(email=email).first()
+
+        if not login:
+            flash(_('E-mail não encontrado.'), 'error')
+            return redirect(url_for('esqueceu_senha'))
+
+        codigo = ''.join(random.choices(string.digits, k=6))
+        login.codigo_verificacao = codigo
+        login.expira_em = datetime.utcnow() + timedelta(minutes=5)
+        db.session.commit()
+
+        msg = Message(_("Recuperação de senha"), sender=app.config['MAIL_USERNAME'], recipients=[email])
+        msg.body = _(f"Seu código de recuperação é: {codigo}. Ele expira em 5 minutos.")
+        mail.send(msg)
+
+        flash(_('Enviamos um código de recuperação para seu e-mail.'), 'sucess')
+        return redirect(url_for('confirmar_codigo', email=email))
+
     return render_template('esqueceu-senha.html')
+
+# ========== ROTA: Confirmar código ===========
+@app.route('/confirmar-codigo/<email>', methods=['GET', 'POST'])
+def confirmar_codigo(email):
+    login = Login.query.filter_by(email=email).first()
+    if not login:
+        flash(_('Usuária não encontrada.'), 'error')
+        return redirect(url_for('esqueceu_senha'))
+
+    if request.method == 'POST':
+        codigo = request.form['codigo']
+
+        if login.codigo_verificacao != codigo:
+            flash(_('Código inválido.'), 'error')
+            return redirect(url_for('confirmar_codigo', email=email))
+
+        if login.expira_em < datetime.utcnow():
+            flash(_('O código expirou, solicite um novo.'), 'error')
+            return redirect(url_for('esqueceu_senha'))
+
+        # Código confirmado
+        session['reset_email'] = email
+        return redirect(url_for('nova_senha'))
+
+    return render_template('confirmar-codigo.html', email=email)
+
+# ========== ROTA: Nova senha ===========
+@app.route('/nova-senha', methods=['GET', 'POST'])
+def nova_senha():
+    email = session.get('reset_email')
+    if not email:
+        flash(_('Sessão expirada, solicite novamente.'), 'error')
+        return redirect(url_for('esqueceu_senha'))
+
+    login = Login.query.filter_by(email=email).first()
+
+    if request.method == 'POST':
+        senha = request.form['senha']
+        login.senha = generate_password_hash(senha)
+        login.codigo_verificacao = None
+        login.expira_em = None
+        db.session.commit()
+
+        session.pop('reset_email', None)
+        flash(_('Senha alterada com sucesso. Faça login novamente.'), 'success')
+        return redirect(url_for('login'))
+
+    return render_template('nova-senha.html')
 
 # ========== Perfil ===========
 @app.route('/perfil')

@@ -18,7 +18,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
 .avatar {
   margin-bottom: 12px;
@@ -45,9 +45,9 @@ body {
   font-weight: 700;
   font-size: 1.5rem;
   letter-spacing: 1px;
-} */
-
- .flash-messages {
+} 
+  
+.flash-messages {
   background: #ffdddd;
   color: #d8000c;
   border-radius: 6px;
@@ -56,9 +56,9 @@ body {
   width: 100%;
   text-align: center;
   font-size: 0.95rem;
-} */
-
- form {
+} 
+  
+form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -78,7 +78,7 @@ label {
   font-weight: 500;
 }
 
-input[type="email"], input[type="password"] {
+input[type="email"], input[type="password"], input[type="text"] {
   padding: 12px;
   border-radius: 12px;
   border: none;
@@ -87,18 +87,18 @@ input[type="email"], input[type="password"] {
   margin-bottom: 2px;
 }
 
-input[type="email"]:focus, input[type="password"]:focus {
+input[type="email"]:focus, input[type="password"], input[type="text"] :focus {
   outline: 2px solid #A887FF;
-} */
-
- .error-message {
+} 
+  
+.error-message {
   color: #ff5a5a;
   font-size: 0.85rem;
   height: 18px;
   margin-bottom: 2px;
-} */
-
- .forgot-link {
+} 
+  
+.forgot-link {
   font-size: 0.91rem;
   color: #A887FF;
   text-align: right;
