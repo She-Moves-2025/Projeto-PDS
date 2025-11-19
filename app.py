@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import func, or_, and_
 from sqlalchemy.orm import joinedload
-from flask_babel import Babel, _
+from flask_babel import Babel
 from flask_mail import Mail, Message
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -88,21 +88,21 @@ def cadastro_cliente():
 
         # Valida CPF
         if not validar_cpf(cpf):
-            flash(_('CPF inválido.'), 'error')
+            flash(('CPF inválido.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
-            flash(_('E-mail já cadastrado.'), 'error')
+            flash(('E-mail já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
         # Verifica se já existe cliente com esse CPF
         if Cliente.query.filter_by(cpf=cpf).first():
-            flash(_('CPF já cadastrado.'), 'error')
+            flash(('CPF já cadastrado.'), 'error')
             return render_template('cadastro-cliente.html')
 
         if idade < 13:
-            flash(_('Você precisa ter pelo menos 13 anos para se cadastrar.'), 'error')
+            flash(('Você precisa ter pelo menos 13 anos para se cadastrar.'), 'error')
             return render_template('cadastro-cliente.html')
         
         # Cria cliente
@@ -132,7 +132,7 @@ def cadastro_cliente():
         msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
         mail.send(msg)
 
-        flash(_('Código de verificação enviado para seu e-mail.'), 'info')
+        flash(('Código de verificação enviado para seu e-mail.'), 'info')
 
         session['tipo'] = 'cliente'
         session['id'] = cliente.id
@@ -159,21 +159,21 @@ def cadastro_profissional():
 
         # Valida CPF
         if not validar_cpf(cpf):
-            flash(_('CPF inválido.'), 'error')
+            flash(('CPF inválido.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Verifica se já existe um login com esse e-mail
         if Login.query.filter_by(email=email).first():
-            flash(_('E-mail já cadastrado.'), 'error')
+            flash(('E-mail já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Verifica se já existe cliente com esse CPF
         if Profissional.query.filter_by(cpf=cpf).first():
-            flash(_('CPF já cadastrado.'), 'error')
+            flash(('CPF já cadastrado.'), 'error')
             return render_template('cadastro-profissional.html')
         
         if idade < 18:
-            flash(_('Você precisa ter pelo menos 18 anos para se cadastrar.'), 'error')
+            flash(('Você precisa ter pelo menos 18 anos para se cadastrar.'), 'error')
             return render_template('cadastro-profissional.html')
 
         # Cria cliente
@@ -203,7 +203,7 @@ def cadastro_profissional():
         msg.body = f"Seu código de verificação é: {codigo}\nEle expira em 5 minutos."
         mail.send(msg)
 
-        flash(_('Código de verificação enviado para seu e-mail.'), 'info')
+        flash(('Código de verificação enviado para seu e-mail.'), 'info')
 
         session['tipo'] = 'profissional'
         session['id'] = profissional.id
@@ -220,25 +220,25 @@ def verificar_email():
     login = Login.query.filter_by(email=email).first()
 
     if not login:
-        flash(_("Usuária não encontrada."), "error")
+        flash(("Usuária não encontrada."), "error")
         return redirect(url_for("login"))
 
     if request.method == "POST":
         codigo = request.form.get("codigo")
 
         if login.codigo_verificacao != codigo:
-            flash(_("Código inválido."), "error")
+            flash(("Código inválido."), "error")
             return redirect(url_for("verificar_email", email=email))
 
         if login.expira_em < datetime.utcnow():
-            flash(_("Código expirado, solicite novamente."), "error")
+            flash(("Código expirado, solicite novamente."), "error")
             return redirect(url_for("verificar_email", email=email))
 
         login.email_verificado = True
         login.codigo_verificacao = None  # opcional: limpar
         db.session.commit()
 
-        flash(_("E-mail verificado com sucesso!"), "success")
+        flash(("E-mail verificado com sucesso!"), "success")
         
         return redirect("/envio-documentos")
     
@@ -286,7 +286,7 @@ def envio_documentos():
         usuaria.selfie = selfie_rel
         db.session.commit()
 
-        flash(_('Documentos enviados com sucesso! Aguarde aprovação.'))
+        flash(('Documentos enviados com sucesso! Aguarde aprovação.'))
         return redirect('/aguardando-aprovacao')
 
     return render_template('envio-documentos.html')
@@ -311,15 +311,15 @@ def login():
         login_user = Login.query.filter_by(email=email).first()
 
         if not login_user:
-            flash(_('Usuária não encontrada.'))
+            flash(('Usuária não encontrada.'))
             return redirect('/')
         
         if not check_password_hash(login_user.senha, senha):
-            flash(_('Senha incorreta.'))
+            flash(('Senha incorreta.'))
             return redirect('/')
         
         if not getattr(login_user, "email_verificado", False):
-            flash(_("Confirme seu e-mail antes de continuar."), "warning")
+            flash(("Confirme seu e-mail antes de continuar."), "warning")
             return redirect(url_for("verificar_email", email=login_user.email))
 
         perfil = Perfil.query.get(login_user.id_perfil)
@@ -446,6 +446,23 @@ def api_bairros(id_cidade):
 
     return jsonify(bairros_ordenados), resp.status_code
 
+@app.route('/api/cidades-sugestao')
+def api_cidades_sugestao():
+    termo = request.args.get('q', '').strip()
+    if not termo:
+        return jsonify([])
+
+    resultados = (
+    db.session.query(Regiao.cidade, Regiao.estado)
+    .filter(func.lower(Regiao.cidade).like(f"%{termo.lower()}%"))
+    .distinct()
+    .limit(10)
+    .all()
+    )
+
+    return jsonify([{'cidade': c, 'estado': e} for c, e in resultados])
+
+
 # --- TELA DE CADASTRO DE REGIÃO E MODALIDADE ---
 
 @app.route('/modalidade-local', methods=['GET', 'POST'])
@@ -492,10 +509,10 @@ def modalidade_local():
         db.session.commit()
 
         if locais_salvos > 0:
-            flash(_('Configuração salva com sucesso!'), 'sucess')
+            flash(('Configuração salva com sucesso!'), 'sucess')
             return redirect('/agenda')  # Redireciona para a página inicial
         else:
-            flash(_('Adicione ao menos um local de atendimento.'), 'error')
+            flash(('Adicione ao menos um local de atendimento.'), 'error')
             # Não redireciona, apenas recarrega a página mostrando a mensagem
 
     # Carrega dados já cadastrados
@@ -521,7 +538,7 @@ def esqueceu_senha():
         login = Login.query.filter_by(email=email).first()
 
         if not login:
-            flash(_('E-mail não encontrado.'), 'error')
+            flash(('E-mail não encontrado.'), 'error')
             return redirect(url_for('esqueceu_senha'))
 
         codigo = ''.join(random.choices(string.digits, k=6))
@@ -529,11 +546,11 @@ def esqueceu_senha():
         login.expira_em = datetime.utcnow() + timedelta(minutes=5)
         db.session.commit()
 
-        msg = Message(_("Recuperação de senha"), sender=app.config['MAIL_USERNAME'], recipients=[email])
-        msg.body = _(f"Seu código de recuperação é: {codigo}. Ele expira em 5 minutos.")
+        msg = Message(("Recuperação de senha"), sender=app.config['MAIL_USERNAME'], recipients=[email])
+        msg.body = (f"Seu código de recuperação é: {codigo}. Ele expira em 5 minutos.")
         mail.send(msg)
 
-        flash(_('Enviamos um código de recuperação para seu e-mail.'), 'sucess')
+        flash(('Enviamos um código de recuperação para seu e-mail.'), 'sucess')
         return redirect(url_for('confirmar_codigo', email=email))
 
     return render_template('esqueceu-senha.html')
@@ -543,18 +560,18 @@ def esqueceu_senha():
 def confirmar_codigo(email):
     login = Login.query.filter_by(email=email).first()
     if not login:
-        flash(_('Usuária não encontrada.'), 'error')
+        flash(('Usuária não encontrada.'), 'error')
         return redirect(url_for('esqueceu_senha'))
 
     if request.method == 'POST':
         codigo = request.form['codigo']
 
         if login.codigo_verificacao != codigo:
-            flash(_('Código inválido.'), 'error')
+            flash(('Código inválido.'), 'error')
             return redirect(url_for('confirmar_codigo', email=email))
 
         if login.expira_em < datetime.utcnow():
-            flash(_('O código expirou, solicite um novo.'), 'error')
+            flash(('O código expirou, solicite um novo.'), 'error')
             return redirect(url_for('esqueceu_senha'))
 
         # Código confirmado
@@ -568,7 +585,7 @@ def confirmar_codigo(email):
 def nova_senha():
     email = session.get('reset_email')
     if not email:
-        flash(_('Sessão expirada, solicite novamente.'), 'error')
+        flash(('Sessão expirada, solicite novamente.'), 'error')
         return redirect(url_for('esqueceu_senha'))
 
     login = Login.query.filter_by(email=email).first()
@@ -581,7 +598,7 @@ def nova_senha():
         db.session.commit()
 
         session.pop('reset_email', None)
-        flash(_('Senha alterada com sucesso. Faça login novamente.'), 'success')
+        flash(('Senha alterada com sucesso. Faça login novamente.'), 'success')
         return redirect(url_for('login'))
 
     return render_template('nova-senha.html')
@@ -625,7 +642,7 @@ def meu_perfil():
             perfil.imagem_perfil = upload_path
 
         db.session.commit()
-        flash(_('Perfil atualizado com sucesso!'), 'success')
+        flash(('Perfil atualizado com sucesso!'), 'success')
         return redirect(url_for('meu_perfil'))
 
     return render_template('meu-perfil.html', perfil=perfil, email=login.email if login else '')
@@ -648,10 +665,23 @@ def buscar():
     if request.method == 'POST':
         estado = request.form.get('estado')
         cidade = request.form.get('cidade') 
+        cidade_digitada = request.form.get('cidade_digitada')
         bairro = request.form.get('bairro')
         modalidade = request.form.get('modalidade')
-        
-        return redirect(url_for('resultados_busca', estado=estado, cidade=cidade, bairro=bairro, modalidade=modalidade))
+
+        if cidade_digitada and not cidade:
+           partes = cidade_digitada.split('-')
+           cidade = partes[0].strip()
+           if len(partes) > 1:
+              estado = partes[1].strip()
+
+        return redirect(url_for(
+            'resultados_busca',
+            estado=estado or '',
+            cidade=cidade or '',
+            bairro=bairro or '',
+            modalidade=modalidade or ''
+        ))
 
     return render_template('busca.html', modalidades=modalidades_disponiveis)
 
@@ -668,26 +698,43 @@ def resultados_busca():
     bairro = request.args.get('bairro', '').strip().lower()
     modalidade = request.args.get('modalidade', '').strip().lower()
 
+    query = Profissional.query.join(Regiao).join(Modalidade).filter(Profissional.validado == True)
 
-    profissionais = Profissional.query\
-        .join(Regiao)\
-        .join(Modalidade)\
-        .filter(
-            func.lower(Regiao.cidade) == cidade.lower(),
-            func.lower(Regiao.bairro) == bairro,
-            func.lower(Modalidade.nome) == modalidade,
-            Profissional.validado == True
-        )\
-        .options(joinedload(Profissional.perfil))\
-        .all()
+    if cidade:
+        query = query.filter(func.lower(Regiao.cidade) == cidade.lower())
 
-    return render_template('resultados.html',
-                         profissionais=profissionais,
-                         busca_info={
-                             'cidade': cidade,
-                             'bairro': bairro,
-                             'modalidade': modalidade
-                         })
+    if bairro:
+        query = query.filter(func.lower(Regiao.bairro) == bairro)
+
+    if modalidade:
+        query = query.filter(func.lower(Modalidade.nome) == modalidade)
+
+    profissionais = query.options(joinedload(Profissional.perfil)).all()
+
+    # Gera texto dinâmico para exibir na página
+    if cidade and not bairro and not modalidade:
+        descricao_busca = f"{cidade}"
+    elif cidade and bairro and not modalidade:
+        descricao_busca = f"{bairro}, {cidade}"
+    elif cidade and modalidade and not bairro:
+        descricao_busca = f"{modalidade.title()} em {cidade}"
+    elif cidade and bairro and modalidade:
+        descricao_busca = f"{modalidade.title()} em {bairro}, {cidade}"
+    else:
+        descricao_busca = "Resultados da busca"
+
+    return render_template(
+        'resultados.html',
+        profissionais=profissionais,
+        busca_info={
+            'estado': estado,
+            'cidade': cidade,
+            'bairro': bairro,
+            'modalidade': modalidade,
+            'descricao': descricao_busca
+        }
+    )
+
 
 # ========== Lista Chat===========
 @app.route('/lista-chat')

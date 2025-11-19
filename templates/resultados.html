@@ -17,12 +17,13 @@
       <!-- <div class="buscar-menu">⋮</div> -->
     </div>
     
-    <input type="text" class="buscar-input" placeholder="Search" value="{{ busca_info.modalidade }} em {{ busca_info.bairro }}">
-    
+    <input type="text" class="buscar-input" placeholder="Buscar novamente" value="{{ busca_info.descricao }}">
+
     <div class="resultados-info">
       <h2>{{ _("Exibindo resultados para") }}</h2>
-      <h3>{{ busca_info.modalidade }} {{ _("em") }} {{ busca_info.bairro }}</h3>
+      <h3>{{ busca_info.descricao }}</h3>
     </div>
+
     
     <div class="profissionais-lista">
   {% for profissional in profissionais %}

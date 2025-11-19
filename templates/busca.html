@@ -14,9 +14,11 @@
       <div class="buscar-menu">⋮</div>
     </div>
     
-    <form id="buscar-form" method="POST">
-      <input type="text" class="buscar-input" placeholder="{{ _('Pesquisa') }}" id="pesquisa">
-      
+    <form id="buscar-form" method="POST" novalidate>
+      <input type="text" class="buscar-input" placeholder="{{ _('Digite uma cidade') }}" id="pesquisa" 
+      name="cidade_digitada" autocomplete="off">
+      <ul id="sugestoes" class="lista-sugestoes"></ul>
+
       <div class="buscar-tabs">
         <button type="button" class="tab-btn active" id="tab-local">{{ _("Local") }}</button>
         <button type="button" class="tab-btn" id="tab-especialidade">{{ _("Especialidade") }}</button>

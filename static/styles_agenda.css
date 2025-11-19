@@ -1,11 +1,5 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-} */
-
 body {
-    background-color: #1e1e1e;
+    background: #2D2A32;
     font-family: 'Oswald', sans-serif;
     color: #fff;
     padding-bottom: 80px;
@@ -238,17 +232,20 @@ nav i {
   justify-content: center;
   align-items: center;
   padding: 16px;
+  box-sizing: border-box;
 }
 
 .modal-content {
   background: #1f1d24;
   color: #fff;
-  padding: 24px;
-  border-radius: 16px;
+  padding: 20px;
+  border-radius: 12px;
   max-width: 400px;
   width: 100%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
   animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto;  
+  box-sizing: border-box;
 }
 
 .modal-content h2 {
@@ -265,10 +262,12 @@ nav i {
   position: absolute;
   top: 20px;
   right: 24px;
-  font-size: 1.6rem;
+  font-size: 28px;;
   color: #fff;
   cursor: pointer;
   transition: color 0.2s;
+  float: right;
+  font-weight: bold;
 }
 
 .modal .close:hover {

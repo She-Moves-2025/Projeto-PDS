@@ -1,14 +1,11 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
-
 body {
-  background-color: #1e1e1e;
+  background-color: #2D2A32;
   font-family: 'Montserrat', Arial, sans-serif;
   min-height: 100vh;
   color: #fff;
+  margin: 10px;
+  padding: 20x;
+  box-sizing: border-box;
 }
 
 .buscar-container {
@@ -16,13 +13,14 @@ body {
   margin: 0 auto;
   padding: 20px;
   min-height: calc(100vh - 80px);
+  position: relative;
 }
 
 .buscar-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  padding: 20px 0 10px 24px;
+  border-radius: 0 0 24px 24px;
 }
 
 .buscar-header h1 {
@@ -39,7 +37,7 @@ body {
 
 .buscar-input {
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 5px;
   border-radius: 25px;
   border: none;
   background: #fff;
@@ -52,6 +50,36 @@ body {
   gap: 10px;
   margin-bottom: 20px;
 }
+
+.lista-sugestoes {
+  position: absolute;
+  top: 65px; /* Ajuste de acordo com a altura do input */
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  display: none; /* oculta por padrão */
+}
+
+.lista-sugestoes.mostrar {
+  display: block;
+}
+
+.lista-sugestoes li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
 
 .tab-btn {
   flex: 1;

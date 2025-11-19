@@ -1,9 +1,9 @@
-/* body {
-  background: #a887ff;
+ body {
+  background-color: #2D2A32;
   font-family: 'Montserrat', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-}  */
+}  
 
 .top-bar {
   background: #39363B;
@@ -138,8 +138,92 @@
   margin-bottom: 10px; 
 }
 
-@media (max-width: 600px) {
-  .tab-content { padding: 8px; }
-  .submit-btn, .fab { margin-right: 10px; }
-  .local-form { flex-direction: column; }
-} 
+/* == Lista (fundo roxo) com rolagem == */
+.modalidades-lista {
+  background: #A887FF;
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100vh - 240px); /* ajustar se precisar */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 90px; /* espaço para a bottom-bar fixa */
+}
+
+/* Cada item (label) */
+.modalidade-item {
+  background: #eaeaea;
+  border-radius: 16px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  cursor: pointer;
+  gap: 12px;
+  color: #222;
+}
+
+/* Esconde o checkbox visualmente mas mantém no DOM (acessível) */
+.modalidade-item input[type="checkbox"] {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  pointer-events: none; /* click no label alterna o checkbox */
+}
+
+/* Texto */
+.modalidade-item span {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  padding-left: 0;
+}
+
+/* marcador circular à direita (pseudo-elemento do span) */
+.modalidade-item span::after {
+  content: '';
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid #ddd;
+  background: #fff;
+  margin-left: auto; /* empurra para a direita */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: all .18s ease;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Quando marcado: mostra check e fica verde/azulado */
+.modalidade-item input[type="checkbox"]:checked + span::after {
+  background: linear-gradient(180deg,#48e0c7,#3ec9b6);
+  border-color: #48e0c7;
+  font-size: 16px;
+  line-height: 1;
+  color: #fff;
+}
+
+/* Pequeno ajuste mobile */
+@media (max-width: 420px) {
+  .modalidade-item {
+    padding: 10px 12px;
+    border-radius: 14px;
+  }
+  .modalidade-item span::after {
+    width: 30px;
+    height: 30px;
+  }
+}
