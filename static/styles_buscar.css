@@ -13,6 +13,7 @@ body {
   margin: 0 auto;
   padding: 20px;
   min-height: calc(100vh - 80px);
+  position: relative;
 }
 
 .buscar-header {
@@ -49,6 +50,36 @@ body {
   gap: 10px;
   margin-bottom: 20px;
 }
+
+.lista-sugestoes {
+  position: absolute;
+  top: 65px; /* Ajuste de acordo com a altura do input */
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  display: none; /* oculta por padrão */
+}
+
+.lista-sugestoes.mostrar {
+  display: block;
+}
+
+.lista-sugestoes li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
 
 .tab-btn {
   flex: 1;

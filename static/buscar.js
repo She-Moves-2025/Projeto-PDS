@@ -85,15 +85,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Validação do formulário
   function validarFormulario() {
-    const modalidadeSelecionada = document.querySelector('input[name="modalidade"]:checked');
-    const localCompleto = estadoSelect.value && cidadeSelect.value && bairroSelect.value;
-    
-    if (modalidadeSelecionada && localCompleto) {
-      buscarBtn.disabled = false;
-    } else {
-      buscarBtn.disabled = true;
-    }
+  const cidadeDigitada = document.getElementById('pesquisa').value.trim();
+  const modalidadeSelecionada = document.querySelector('input[name="modalidade"]:checked');
+  const localCompleto = estadoSelect.value && cidadeSelect.value && bairroSelect.value;
+
+  if (cidadeDigitada && !localCompleto) {
+    estadoSelect.removeAttribute('required');
+    cidadeSelect.removeAttribute('required');
+    bairroSelect.removeAttribute('required');
+  } else {
+    estadoSelect.setAttribute('required', '');
+    cidadeSelect.setAttribute('required', '');
+    bairroSelect.setAttribute('required', '');
   }
+
+  // Se tiver cidade digitada OU local completo OU modalidade, permite buscar
+  if (cidadeDigitada || localCompleto || modalidadeSelecionada) {
+    buscarBtn.disabled = false;
+  } else {
+    buscarBtn.disabled = true;
+  }
+}
+
+document.getElementById('pesquisa').addEventListener('input', validarFormulario);
 
   // Validar ao selecionar modalidade
   document.querySelectorAll('input[name="modalidade"]').forEach(radio => {
@@ -103,3 +117,52 @@ document.addEventListener('DOMContentLoaded', function() {
   // Validar ao mudar selects
   bairroSelect.addEventListener('change', validarFormulario);
 });
+
+
+// ===== AUTOCOMPLETE DE CIDADE =====
+const inputCidade = document.getElementById('pesquisa');
+const listaSugestoes = document.getElementById('sugestoes');
+let timeoutBusca;
+
+inputCidade.addEventListener('input', () => {
+  const termo = inputCidade.value.trim();
+  listaSugestoes.innerHTML = '';
+  listaSugestoes.classList.remove('mostrar');
+
+  if (termo.length < 2) return;
+
+  clearTimeout(timeoutBusca);
+  timeoutBusca = setTimeout(async () => {
+    try {
+      const response = await fetch(`/api/cidades-sugestao?q=${encodeURIComponent(termo)}`);
+      const cidades = await response.json();
+
+      if (cidades.length === 0) return;
+
+      cidades.forEach(({ cidade, estado }) => {
+        const li = document.createElement('li');
+        li.textContent = `${cidade} - ${estado}`;
+        li.addEventListener('click', () => {
+          inputCidade.value = `${cidade} - ${estado}`;
+          listaSugestoes.innerHTML = '';
+          listaSugestoes.classList.remove('mostrar');
+          validarFormulario();
+        });
+        listaSugestoes.appendChild(li);
+      });
+
+      listaSugestoes.classList.add('mostrar');
+    } catch (e) {
+      console.error('Erro ao buscar cidades:', e);
+    }
+  }, 300);
+});
+
+// Oculta ao clicar fora
+document.addEventListener('click', (e) => {
+  if (!listaSugestoes.contains(e.target) && e.target !== inputCidade) {
+    listaSugestoes.innerHTML = '';
+    listaSugestoes.classList.remove('mostrar');
+  }
+});
+
