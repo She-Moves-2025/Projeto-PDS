@@ -100,7 +100,7 @@ def cadastro_cliente():
 
         # Valida CPF
         if not validar_cpf(cpf):
-            flash(_('CPF inválido.'), 'error')
+            flash(('CPF inválido.'), 'error')
             return render_template('cadastro-cliente.html')
 
         # Verifica se já existe um login com esse e-mail
